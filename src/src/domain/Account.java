@@ -1,13 +1,15 @@
 package src.domain;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class Account implements Serializable {
-    private String accountNumber;
-    private String accountPassword;
-    private Long balance;
+@AllArgsConstructor
+public class Account {
+    private String accountNumber;//계좌번호
+    private String accountPassword;//계좌비밀번호
+    private Long balance;//잔액
 }
