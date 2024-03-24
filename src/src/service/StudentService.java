@@ -1,6 +1,7 @@
 package src.service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -23,6 +24,7 @@ public class StudentService {
     // 알림 repo 불러오기
     private Repository<Notification, Integer> notificationRepository;
     private Repository<Student, String> studentRepository;
+    private Repository<Teacher, String> teacherRepository;
 
 
 
@@ -31,11 +33,13 @@ public class StudentService {
         this.lectureRegistrationRepository = RepositoryProvider.getInstance().provide(ServiceType.LECTURE);
         this.notificationRepository = RepositoryProvider.getInstance().provide(ServiceType.NOTIFICATION);
         this.studentRepository = RepositoryProvider.getInstance().provide(ServiceType.STUDENT);
+        this.teacherRepository = RepositoryProvider.getInstance().provide(ServiceType.TEACHER);
 
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     Student student = new Student();
     StudyRoom studyRoom = new StudyRoom();
+    Map<String, List<LectureRegistration>> studentRegistrations = new HashMap<>(); // 수강 신청 시 정보 넣기
 
     boolean[][] checkSeat = studyRoom.getCheckSeat();
     // 굳이?????
@@ -74,40 +78,35 @@ public class StudentService {
             System.out.print("강의 이름: " + lecture.getLectureName() + "\t");
             System.out.print("강의 요일: " + lecture.getLectureTime() + "\t");
             System.out.print("강의 시간: " + lecture.getLectureDay() + "\t");
-            System.out.println("강사: " + lecture.getLectureTeacherId() + "\t");
-            // 강사 이름이 나와야 하는거 아닌가.....?
-            // Teacher teacher = teacherR
-
-            //Teacher teacher = teacherRepository.findById(lecture.getTeacherId());
-
+            System.out.println("강사: " + lecture.getLectureTeacherName() + "\t");
             System.out.println(); // 강의 사이에 공백 라인 추가
         }
     }
 
+
     // 수강 신청 내역 가져와 출력
     public void showStudentAllRegistrationLecture(String studentId) throws IOException {
-        // 수강 신청 내역 가져오기
-        // 필터링 (해당 학생의 수강 신청 내역)
-        List<LectureRegistration> studentLectureRegistration = lectureRegistrationRepository.findAll().stream()
-                .filter(registration -> registration.getStudentId().equals(studentId))
-                .collect(Collectors.toList());
+         //수강 신청 내역 가져오기
+         //필터링 (해당 학생의 수강 신청 내역)
+//        List<LectureRegistration> studentLectureRegistration = lectureRegistrationRepository.findAll().stream()
+//                .filter(registration -> registration.getStudentId().equals(studentId))
+//                .collect(Collectors.toList());
 
         // 해당 학생 수강 신청 내역 출력
-        if(studentLectureRegistration.isEmpty()) {
+        if(!studentRegistrations.containsKey(studentId)) {
             // 만약 수강 신청 내역이 없다면
             System.out.println("수강 신청 내역이 없습니다.");
         } else {
             System.out.println("수강 신청 내역");
-            for (LectureRegistration registration : studentLectureRegistration) {
-                System.out.println(registration);
-                //
+            System.out.println(studentRegistrations.get(studentId));
+
             }
         }
 
     }
 
     // 수강 신청
-    public void registerLecture() throws IOException {
+    public void registerLecture(Student student, Lecture lecture) throws IOException {
         // 원하는 강의 고르기
         System.out.print("수강하고자 하는 강의의 강의 id를 입력해주세요: ");
         String choiceLectureId = sc.nextLine();
@@ -118,25 +117,17 @@ public class StudentService {
             System.out.println("존재하지 않는 강의입니다.");
             return;
         }
-        // 학생 수강 신청 내역 (GPT 코드)
-        Student student = studentRepository.findById("koo");
+        // 이미 해당 시간에 수강 중인 강의인지 확인
+        boolean isAlreadyRegistered = student.getLectureRegistrationList().stream()
+                .anyMatch(l -> l.getLectureTime() == lecture.getLectureTime());
 
-
-        List<LectureRegistration> studentRegistrations = student.getLectureRegistrationList();
-        //lectureRegistrationRepository.findAllByStudentId(student.getId());
-        // 이 코드의 문제 : lectureRegistrationRepository 에 findAllByStudentId() 가 없다는 것
-
-        //new Enrollment("koo", choiceLectureId);
-
-        // 이 강의의 시간 가져오기
-        // String lectureTime = pickLecture.getLectureTime();
-        // 그냥 떠오르는 코드 쓴거라.... 맞는지 모르겠는데.......
-
-        // 내 시간표에서 해당 시간에 수강 신청한 강의가 있는지 확인하기 > 없으면 수강 등록, 없으면 수강 실패 문구
-//        boolean alreadyRegistered = studentRegistrations.stream()
-//                .anyMatch(registration -> registration.getLectureDay().equals(lectureTime));
-
-
+        // 이미 수강 중인 강의가 없으면 수강 신청 처리
+        if (!isAlreadyRegistered) {
+            studentRegistrations.put(student.getId(), lecture.getLectureRegistrationList());
+            System.out.println("수강 신청이 완료되었습니다.");
+        } else {
+            System.out.println("이미 해당 시간에 다른 강의를 수강 중입니다.");
+        }
     }
 
     // 수강 취소
