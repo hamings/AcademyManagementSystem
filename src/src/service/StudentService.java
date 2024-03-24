@@ -216,4 +216,23 @@ public class StudentService {
 
     }
 
+    // 자습실 예약 취소
+    public boolean cancelReservation() {
+        String seatNum = sc.nextLine();
+        //Integer seatNumber = Integer.valueOf(studyRoom.getReservationMap().get(studentId)); // 해당 학생의 좌석 번호 가져오기
+        String[] seatInfo = seatNum.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
+        int x = Integer.parseInt(seatInfo[0]) - 1;
+        int y = Integer.parseInt(seatInfo[1]) - 1;
+
+        if (reservationMap.containsValue(seatNum)) { // ReservationMap 에 해당 좌석 번호가 들어가 있다면
+            // 이 좌석이 내꺼가 맞는지도 검증해야 하는데...
+            // 삭제
+            reservationMap.values().remove(seatNum); // 맵에서 해당 학생의 예약 정보 제거
+            checkSeat[x][y] = false; //  checkSeat 배열에서도 제거
+        } else {
+            System.out.println("해당 좌석은 예약되어 있지 않습니다.");
+        }
+        return false;
+    }
+
 }
