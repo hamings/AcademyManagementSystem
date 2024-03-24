@@ -32,4 +32,18 @@ public class TeacherService {
         }
     }
 
+    /**
+     * 해당 강의를 수강하는 학생 리스트를 보여주는 함수
+     * @param lectureId : 강의번호
+     */
+    public void showStudentListByLecture(String lectureId) throws IOException {
+        Lecture findLecture = teacher.getLectureList().stream()
+                .filter(lecture -> lecture.getLectureId().equals(lectureId))
+                .findFirst().get();
+
+        for(LectureRegistration lectureRegistration: findLecture.getLectureRegistrationList()){
+            Student student = studentRepository.findById(lectureRegistration.getStudentId());
+            System.out.println("학생명: "+student.getName());
+        }
+    }
 }
