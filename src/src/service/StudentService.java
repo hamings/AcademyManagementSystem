@@ -85,7 +85,7 @@ public class StudentService {
     }
 
     // 수강 신청 내역 가져와 출력
-    public void showStudentAllRegistrationLecture(String studentId) {
+    public void showStudentAllRegistrationLecture(String studentId) throws IOException {
         // 수강 신청 내역 가져오기
         // 필터링 (해당 학생의 수강 신청 내역)
         List<LectureRegistration> studentLectureRegistration = lectureRegistrationRepository.findAll().stream()
@@ -103,6 +103,39 @@ public class StudentService {
                 //
             }
         }
+
+    }
+
+    // 수강 신청
+    public void registerLecture() throws IOException {
+        // 원하는 강의 고르기
+        System.out.print("수강하고자 하는 강의의 강의 id를 입력해주세요: ");
+        String choiceLectureId = sc.nextLine();
+
+        // 강의 리스트에서 해당 강의 정보 가져오기
+        Lecture pickLecture = lectureRepository.findById(choiceLectureId);
+        if (pickLecture == null) {
+            System.out.println("존재하지 않는 강의입니다.");
+            return;
+        }
+        // 학생 수강 신청 내역 (GPT 코드)
+        Student student = studentRepository.findById("koo");
+
+
+        List<LectureRegistration> studentRegistrations = student.getLectureRegistrationList();
+        //lectureRegistrationRepository.findAllByStudentId(student.getId());
+        // 이 코드의 문제 : lectureRegistrationRepository 에 findAllByStudentId() 가 없다는 것
+
+        //new Enrollment("koo", choiceLectureId);
+
+        // 이 강의의 시간 가져오기
+        // String lectureTime = pickLecture.getLectureTime();
+        // 그냥 떠오르는 코드 쓴거라.... 맞는지 모르겠는데.......
+
+        // 내 시간표에서 해당 시간에 수강 신청한 강의가 있는지 확인하기 > 없으면 수강 등록, 없으면 수강 실패 문구
+//        boolean alreadyRegistered = studentRegistrations.stream()
+//                .anyMatch(registration -> registration.getLectureDay().equals(lectureTime));
+
 
     }
 
