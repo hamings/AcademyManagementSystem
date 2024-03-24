@@ -1,6 +1,7 @@
 package src.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +104,7 @@ public class StudentService {
             }
         }
 
-    }
+
 
     // 수강 신청
     public void registerLecture(Student student, Lecture lecture) throws IOException {
@@ -131,15 +132,38 @@ public class StudentService {
     }
 
     // 수강 취소
-    public void deleteLecture() {
+    public void deleteLecture(String studentId) {
         // 내 시간표 보여주기
-
+        System.out.println(studentRegistrations.get(studentId));
 
         // 취소하고자 하는 강의 고르기
         System.out.print("취소하고자 하는 강의의 강의 id를 입력해주세요: ");
         String choiceLectureId = sc.nextLine();
 
         // 내 시간표에 해당 id 강의가 있는지 확인 > 있으면 삭제, 없으면 취소 실패 문구
+        //if(studentRegistrations.get(studentId).getLectureId.get(le).equals(choiceLectureId)) {
+            // studentRegistrations.get(studentId) => List<LectureRegistration> 형태
+
+        // GPT 참고
+        // 수강 신청 내역에서 해당 강의를 찾아 삭제
+        studentRegistrations.forEach((key, registrations) ->
+                registrations.removeIf(registration -> registration.getLectureId().equals(choiceLectureId))
+        );
+
+        boolean isCancelled = false;
+        for (List<LectureRegistration> registrations : studentRegistrations.values()) {
+            if (registrations.removeIf(registration -> registration.getLectureId().equals(choiceLectureId))) {
+                isCancelled = true;
+                break;
+            }
+        }
+
+        // 취소 여부에 따라 결과 출력
+        if (isCancelled) {
+            System.out.println("해당 강의를 수강하고 있지 않습니다.");
+        } else {
+            System.out.println("수강이 취소되었습니다.");
+        }
 
     }
 
