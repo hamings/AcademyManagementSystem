@@ -2,23 +2,36 @@ package src.domain;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 
 public class Student  implements Serializable {
-    private String id;
-    private String password;
-    private String name;
-    private String gender;
-    private String phoneNumber;
-    private String birthday;
-    private String accountNumber;
-    private int lectureCost;
-    private String accountPassword;
+    private String id;//학생 아이디
+    private String password;//학생 비밀번호
+    private String name;//학생 이름
+    private String gender;//학생 성별
+    private String phoneNumber;//학생 전화번호
+    private String birthday;//학생 생년월일
+    private String accountNumber;//학생 계좌번호
+    private String accountPassword;//학생 계좌비밀번호
+    private Long lectureCost;//학원비
     private List<Long> lectureRegistrationIdList;
     private transient List<LectureRegistration> lectureRegistrationList;
 
+    public Student(String id, String password, String name, String gender, String phoneNumber, String birthday, String accountNumber, String accountPassword) {
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+        this.accountNumber = accountNumber;
+        this.accountPassword = accountPassword;
+        this.lectureCost = 5000L;
+        this.lectureRegistrationIdList = new ArrayList<>();
+    }
     //선택된 학생 수정할 수 있는 정보 출력
     public void editStudentInformation(){
         System.out.println("<학생수정정보>");
@@ -34,7 +47,7 @@ public class Student  implements Serializable {
     }
 
     public void printDetailStudentInformation(){
-        System.out.println("이름: " + name + ", 아이디: " + id + ", 성별: " + gender + ", 생년월일: " + birthday + ", 휴대폰번호: " + phoneNumber + "계좌번호: " + accountNumber);
+        System.out.println("이름: " + name + ", 아이디: " + id + ", 성별: " + gender + ", 생년월일: " + birthday + ", 휴대폰번호: " + phoneNumber + " 계좌번호: " + accountNumber);
     }
 
 }
