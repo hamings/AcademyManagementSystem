@@ -180,4 +180,40 @@ public class StudentService {
         System.out.println("*****************************************");
     }
 
+    // 좌석 예약
+    // 좌석 번호 입력 후 예약 가능 여부 확인
+    public boolean isPossibleReserve() {
+        System.out.print("예약을 원하는 좌석 번호를 입력하세요(ex: 1-1) : ");
+        String choiceSeat = sc.nextLine();
+        System.out.println();
+        String[] seatInfo = choiceSeat.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
+        int x = Integer.parseInt(seatInfo[0]) - 1;
+        int y = Integer.parseInt(seatInfo[1]) - 1;
+
+
+        if (x < 0 || x >= checkSeat.length || y < 0 || y >= checkSeat[0].length) {
+            System.out.println("잘못된 좌석 번호입니다.");
+            return false;
+        }
+
+        if (this.checkSeat[x][y]) { // 좌석이 이미 예약된 경우
+            System.out.println("이미 예약된 좌석입니다.");
+            return false;
+        }
+
+        if (studyRoom.getReservationMap().containsKey(student.getId())) {
+            // 만약 이미 이 학생의 당일 예약 기록이 있다면
+            System.out.println("이미 예약한 좌석이 있습니다.");
+            System.out.println("예약한 좌석 : " + studyRoom.getReservationMap().get(student.getId()));
+        }
+
+        // 좌석이 예약 가능한 경우
+        checkSeat[x][y] = true; // 해당 좌석을 예약
+        reservationMap.put(student.getId(), String.valueOf(x * checkSeat[0].length + y));
+        // 학생 아이디와 좌석 번호를 맵에 저장
+        // 근데 student.getId() 가.... 내(지금 접속한 학생) id 만 불러오는게 맞나?
+        return true; // 예약 성공
+
+    }
+
 }
