@@ -5,39 +5,33 @@ import src.domain.Notification;
 import src.util.FileSystem;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Queue;
 
-public class NotificationRepository extends Repository<Notification, Integer>{
+public class NotificationRepository extends Repository<Queue<Notification>, String>{
     @Override
-    public boolean isExist(Integer objectId) {
-        if(objectMap.get(objectId) != null) return true;
+    public boolean isExist(String objectId) {
         return false;
     }
 
     @Override
-    public Notification findById(Integer objectId) {
+    public Queue<Notification> findById(String objectId) throws IOException {
+        Queue q = objectMap.get(objectId);
+        if(q == null) objectMap.put(objectId, new LinkedList<>());
+
+        return objectMap.get(objectId);
+    }
+
+    @Override
+    public List<Queue<Notification>> findAll() {
         return null;
     }
 
-    public List<Notification> findByStudentId(String studentId) {
-        return objectMap.entrySet().stream()
-                .filter(e -> e.getValue().getStudentId() == studentId)
-                .map(e -> e.getValue())
-                .collect(Collectors.toList());
-    }
-
     @Override
-    public List<Notification> findAll() {
-        return objectMap.entrySet().stream()
-                .map(e-> e.getValue())
-                .collect(Collectors.toList());
-    }
+    public void insert(Queue<Notification> object) {
 
-    @Override
-    public void insert(Notification notification) {
-        objectMap.put(notification.getNotificationId(), notification);
     }
 
     @Override
@@ -46,10 +40,11 @@ public class NotificationRepository extends Repository<Notification, Integer>{
     }
 
     @Override
-    public int delete(Notification object) {
-        objectMap.remove(object.getNotificationId());
-        return 1;
+    public int delete(Queue<Notification> object) throws IOException {
+        return 0;
     }
+
+
 
     @Override
     boolean support(ServiceType serviceType) {
@@ -58,6 +53,6 @@ public class NotificationRepository extends Repository<Notification, Integer>{
 
     @Override
     void init() throws IOException {
-        super.objectMap = (Map<Integer, Notification>) FileSystem.loadObjectMap(ServiceType.NOTIFICATION);
+        super.objectMap = (Map<String, Queue<Notification>>) FileSystem.loadObjectMap(ServiceType.NOTIFICATION);
     }
 }
