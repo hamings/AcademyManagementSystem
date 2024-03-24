@@ -14,6 +14,7 @@ import src.domain.Notification;
 import src.domain.Student;
 import src.domain.StudyRoom;
 import src.domain.Teacher;
+import src.repository.LectureRepository;
 import src.repository.Repository;
 import src.repository.RepositoryProvider;
 
@@ -84,7 +85,6 @@ public class StudentService {
         }
     }
 
-
     // 수강 신청 내역 가져와 출력
     public void showStudentAllRegistrationLecture(String studentId) throws IOException {
          //수강 신청 내역 가져오기
@@ -105,7 +105,6 @@ public class StudentService {
         }
 
 
-
     // 수강 신청
     public void registerLecture(Student student, Lecture lecture) throws IOException {
         // 원하는 강의 고르기
@@ -124,7 +123,24 @@ public class StudentService {
 
         // 이미 수강 중인 강의가 없으면 수강 신청 처리
         if (!isAlreadyRegistered) {
-            studentRegistrations.put(student.getId(), lecture.getLectureRegistrationList());
+            LectureRegistration lectureRegistration = new LectureRegistration();
+            lectureRegistration.setLectureId(lecture.getLectureId());
+            lectureRegistration.setStudentId(student.getId());
+            lectureRegistration.setLectureDay(lecture.getLectureDay());
+            lectureRegistration.setLectureTime(lecture.getLectureTime());
+
+            student.getLectureRegistrationList().add(lectureRegistration);
+            student.getLectureRegistrationIdList().add(lectureRegistration.getId());
+
+            lecture.getLectureRegistrationList().add(lectureRegistration);
+            lecture.getLectureRegistrationIdList().add(lectureRegistration.getId());
+
+            lectureRegistrationRepository.insert(lectureRegistration);
+            lectureRegistrationRepository.save();
+
+            studentRepository.save();
+            lectureRepository.save();
+            //studentRegistrations.put(student.getId(), lecture.getLectureRegistrationList());
             System.out.println("수강 신청이 완료되었습니다.");
         } else {
             System.out.println("이미 해당 시간에 다른 강의를 수강 중입니다.");
