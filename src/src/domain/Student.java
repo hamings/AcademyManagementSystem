@@ -1,12 +1,17 @@
 package src.domain;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Student  implements Serializable {
     private String id;//학생 아이디
     private String password;//학생 비밀번호
