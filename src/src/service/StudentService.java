@@ -42,10 +42,6 @@ public class StudentService {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     Student student = new Student();
     StudyRoom studyRoom = new StudyRoom();
-    //boolean[][] checkSeat = studyRoom.getCheckSeat();
-    // 굳이?????
-    //Map<String, String> reservationMap = studyRoom.getReservationMap();
-
     Scanner sc = new Scanner(System.in);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,7 +112,7 @@ public class StudentService {
         }
         // 이미 해당 시간에 수강 중인 강의인지 확인
         boolean isAlreadyRegistered = student.getLectureRegistrationList().stream()
-                .anyMatch(l -> l.getLectureTime() == lecture.getLectureTime());
+                .anyMatch(l -> l.getLectureTime() == pickLecture.getLectureTime());
 
         // 이미 수강 중인 강의가 없으면 수강 신청 처리
         if (!isAlreadyRegistered) {
@@ -205,12 +201,12 @@ public class StudentService {
 
         for (int i = 0; i < studyRoom.getCheckSeat().length; i++) {
             for (int j = 0; j < studyRoom.getCheckSeat()[i].length; j++) {
-                //System.out.print(checkSeat[i][j] ? "O " : "X "); // 예약된 좌석은 "O", 비어있는 좌석은 "X"로 출력
-                System.out.print(studyRoom.getCheckSeat()[i][j] ? studyRoom.getReservationMap().get(String.valueOf(i+"-"+j)) : System.out.printf("[%d-%d] ",i+1,j+1));
-                // 만약 예약된 좌석이면 map 에서 해당 좌석 번호로 타고 들어가 key 값인 studentId 가져오기
-                // String.valueOf(i+"-"+j)) 이거 아님!!!!
-                // value 를 가지고 key 뽑아낼 수 있나?
-                // 만약 빈 좌석이면 1-1, 2-1 등 좌석 번호 보이기
+                // 예약된 좌석은 'X', 예약 가능한 좌석은 좌석 번호 표시
+                if (studyRoom.getCheckSeat()[i][j]) {
+                    System.out.printf("[%s] ", studyRoom.getReservationMap().getOrDefault(String.valueOf(i * studyRoom.getCheckSeat()[0].length + j), "X"));
+                } else {
+                    System.out.printf("[%d-%d] ", i + 1, j + 1);
+                }
             }
             System.out.println(); // 다음 줄로 넘어감
         }
@@ -227,28 +223,30 @@ public class StudentService {
         int x = Integer.parseInt(seatInfo[0]) - 1;
         int y = Integer.parseInt(seatInfo[1]) - 1;
 
-
+        // 좌석 번호의 유효성 검사
         if (x < 0 || x >= studyRoom.getCheckSeat().length || y < 0 || y >= studyRoom.getCheckSeat()[0].length) {
             System.out.println("잘못된 좌석 번호입니다.");
             return false;
         }
 
-        if (this.studyRoom.getCheckSeat()[x][y]) { // 좌석이 이미 예약된 경우
+        // 좌석이 이미 예약된 경우
+        if (this.studyRoom.getCheckSeat()[x][y]) {
             System.out.println("이미 예약된 좌석입니다.");
             return false;
         }
 
+        // 만약 이미 이 학생의 당일 예약 기록이 있다면
         if (studyRoom.getReservationMap().containsKey(student.getId())) {
-            // 만약 이미 이 학생의 당일 예약 기록이 있다면
             System.out.println("이미 예약한 좌석이 있습니다.");
             System.out.println("예약한 좌석 : " + studyRoom.getReservationMap().get(student.getId()));
         }
 
-        // 좌석이 예약 가능한 경우
-        studyRoom.getCheckSeat()[x][y] = true; // 해당 좌석을 예약
+        // 예약 가능한 경우 (잘못된 좌석 번호 X, 이미 예약된 좌석 X, 당일 예약 기록 X)
+        // 해당 좌석 예약
+        studyRoom.getCheckSeat()[x][y] = true;
+        // 학생 아이디와 좌석 번호 맵에 저장
         studyRoom.getReservationMap().put(student.getId(), String.valueOf(x * studyRoom.getCheckSeat()[0].length + y));
-        // 학생 아이디와 좌석 번호를 맵에 저장
-
+        System.out.println("좌석이 성공적으로 예약되었습니다.");
         return true; // 예약 성공
 
     }
@@ -261,15 +259,24 @@ public class StudentService {
         int x = Integer.parseInt(seatInfo[0]) - 1;
         int y = Integer.parseInt(seatInfo[1]) - 1;
 
-        if (studyRoom.getReservationMap().containsValue(seatNum)) { // ReservationMap 에 해당 좌석 번호가 들어가 있다면
-            // 이 좌석이 내꺼가 맞는지도 검증해야 하는데...
-            // 삭제
-            studyRoom.getReservationMap().values().remove(seatNum); // 맵에서 해당 학생의 예약 정보 제거
-            studyRoom.getCheckSeat()[x][y] = false; //  checkSeat 배열에서도 제거
-        } else {
-            System.out.println("해당 좌석은 예약되어 있지 않습니다.");
+        // 좌석 번호 유효성 검사
+        if (x < 0 || x >= studyRoom.getCheckSeat().length || y < 0 || y >= studyRoom.getCheckSeat()[0].length) {
+            System.out.println("잘못된 좌석 번호입니다.");
+            return false;
         }
-        return false;
+
+        // 예약된 좌석인지 확인하고 해당 학생의 예약인지 검사
+        if (studyRoom.getReservationMap().containsKey(student.getId()) &&  // 내 좌석이 있는지
+                studyRoom.getReservationMap().get(student.getId()).equals(seatNum)) {  // 내가 입력한 좌석 번호와 일치하는지
+            // 예약 취소
+            studyRoom.getReservationMap().remove(student.getId());
+            studyRoom.getCheckSeat()[x][y] = false; // 좌석 예약 취소
+            System.out.println("좌석 예약이 취소되었습니다.");
+            return true;
+        } else {
+            System.out.println("해당 좌석은 예약되어 있지 않거나 다른 학생이 예약한 좌석입니다.");
+            return false;
+        }
     }
 
 }
