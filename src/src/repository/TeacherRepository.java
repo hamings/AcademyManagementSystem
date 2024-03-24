@@ -4,8 +4,8 @@ import src.ServiceType;
 import src.domain.Lecture;
 import src.domain.LectureRegistration;
 import src.domain.Teacher;
+import src.util.FileSystem;
 
-import java.io.FileSystem;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
