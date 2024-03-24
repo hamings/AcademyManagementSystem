@@ -36,7 +36,7 @@ public class NotificationRepository extends Repository<Queue<Notification>, Stri
 
     @Override
     public void save() throws IOException {
-        FileSystem.saveObjectMap(ServiceType.LECTURE, objectMap);
+        FileSystem.saveObjectMap(ServiceType.NOTIFICATION, objectMap);
     }
 
     @Override
