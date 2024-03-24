@@ -139,5 +139,45 @@ public class StudentService {
 
     }
 
+    // 수강 취소
+    public void deleteLecture() {
+        // 내 시간표 보여주기
+
+
+        // 취소하고자 하는 강의 고르기
+        System.out.print("취소하고자 하는 강의의 강의 id를 입력해주세요: ");
+        String choiceLectureId = sc.nextLine();
+
+        // 내 시간표에 해당 id 강의가 있는지 확인 > 있으면 삭제, 없으면 취소 실패 문구
+
+    }
+
+    // 2. 자습실 예약
+    // 해당 서비스 메뉴 보이기
+    public void showStudyRoomMenu() {
+        System.out.println("------------------");
+        System.out.println("-----자습실 예약-----");
+        System.out.println("------------------");
+        System.out.println("1. 예약하기");
+        System.out.println("2. 예약취소하기");
+    }
+
+    // 자습실 좌석표 출력
+    public void showStudyRoomStatus(StudyRoom studyRoom) {
+        //boolean[][] checkSeat = studyRoom.getCheckSeat();
+
+        for (int i = 0; i < checkSeat.length; i++) {
+            for (int j = 0; j < checkSeat[i].length; j++) {
+                //System.out.print(checkSeat[i][j] ? "O " : "X "); // 예약된 좌석은 "O", 비어있는 좌석은 "X"로 출력
+                System.out.print(checkSeat[i][j] ? reservationMap.get(String.valueOf(i+"-"+j)) : System.out.printf("[%d-%d] ",i+1,j+1));
+                // 만약 예약된 좌석이면 map 에서 해당 좌석 번호로 타고 들어가 key 값인 studentId 가져오기
+                // String.valueOf(i+"-"+j)) 이거 아님!!!!
+                // value 를 가지고 key 뽑아낼 수 있나?
+                // 만약 빈 좌석이면 1-1, 2-1 등 좌석 번호 보이기
+            }
+            System.out.println(); // 다음 줄로 넘어감
+        }
+        System.out.println("*****************************************");
+    }
 
 }
