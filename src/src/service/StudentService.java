@@ -84,5 +84,27 @@ public class StudentService {
         }
     }
 
+    // 수강 신청 내역 가져와 출력
+    public void showStudentAllRegistrationLecture(String studentId) {
+        // 수강 신청 내역 가져오기
+        // 필터링 (해당 학생의 수강 신청 내역)
+        List<LectureRegistration> studentLectureRegistration = lectureRegistrationRepository.findAll().stream()
+                .filter(registration -> registration.getStudentId().equals(studentId))
+                .collect(Collectors.toList());
+
+        // 해당 학생 수강 신청 내역 출력
+        if(studentLectureRegistration.isEmpty()) {
+            // 만약 수강 신청 내역이 없다면
+            System.out.println("수강 신청 내역이 없습니다.");
+        } else {
+            System.out.println("수강 신청 내역");
+            for (LectureRegistration registration : studentLectureRegistration) {
+                System.out.println(registration);
+                //
+            }
+        }
+
+    }
+
 
 }
