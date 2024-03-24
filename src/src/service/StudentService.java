@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import src.ServiceType;
@@ -41,11 +42,9 @@ public class StudentService {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     Student student = new Student();
     StudyRoom studyRoom = new StudyRoom();
-    Map<String, List<LectureRegistration>> studentRegistrations = new HashMap<>(); // 수강 신청 시 정보 넣기
-
-    boolean[][] checkSeat = studyRoom.getCheckSeat();
+    //boolean[][] checkSeat = studyRoom.getCheckSeat();
     // 굳이?????
-    Map<String, String> reservationMap = studyRoom.getReservationMap();
+    //Map<String, String> reservationMap = studyRoom.getReservationMap();
 
     Scanner sc = new Scanner(System.in);
 
@@ -87,24 +86,22 @@ public class StudentService {
 
     // 수강 신청 내역 가져와 출력
     public void showStudentAllRegistrationLecture(String studentId) throws IOException {
-         //수강 신청 내역 가져오기
-         //필터링 (해당 학생의 수강 신청 내역)
-//        List<LectureRegistration> studentLectureRegistration = lectureRegistrationRepository.findAll().stream()
-//                .filter(registration -> registration.getStudentId().equals(studentId))
-//                .collect(Collectors.toList());
+        //수강 신청 내역 가져오기
+        //필터링 (해당 학생의 수강 신청 내역)
+        List<LectureRegistration> studentLectureRegistration = lectureRegistrationRepository.findAll().stream()
+                .filter(registration -> registration.getStudentId().equals(studentId))
+                .collect(Collectors.toList());
 
         // 해당 학생 수강 신청 내역 출력
-        if(!studentRegistrations.containsKey(studentId)) {
+        if (studentLectureRegistration == null) {
             // 만약 수강 신청 내역이 없다면
             System.out.println("수강 신청 내역이 없습니다.");
         } else {
             System.out.println("수강 신청 내역");
-            System.out.println(studentRegistrations.get(studentId));
+            System.out.println(studentLectureRegistration);
 
-            }
         }
-
-
+    }
     // 수강 신청
     public void registerLecture(Student student, Lecture lecture) throws IOException {
         // 원하는 강의 고르기
@@ -148,37 +145,46 @@ public class StudentService {
     }
 
     // 수강 취소
-    public void deleteLecture(String studentId) {
+    public void deleteLecture() throws IOException {
         // 내 시간표 보여주기
-        System.out.println(studentRegistrations.get(studentId));
+        try {
+            System.out.println(studentRepository.findById(student.getId()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         // 취소하고자 하는 강의 고르기
         System.out.print("취소하고자 하는 강의의 강의 id를 입력해주세요: ");
         String choiceLectureId = sc.nextLine();
 
-        // 내 시간표에 해당 id 강의가 있는지 확인 > 있으면 삭제, 없으면 취소 실패 문구
-        //if(studentRegistrations.get(studentId).getLectureId.get(le).equals(choiceLectureId)) {
-            // studentRegistrations.get(studentId) => List<LectureRegistration> 형태
-
-        // GPT 참고
-        // 수강 신청 내역에서 해당 강의를 찾아 삭제
-        studentRegistrations.forEach((key, registrations) ->
-                registrations.removeIf(registration -> registration.getLectureId().equals(choiceLectureId))
-        );
+        // 내 시간표에 해당 id 강의가 있는지 확인 후 삭제 또는 취소 실패 문구 출력
+        List<Lecture> studentTimetable = student.getLectureRegistrationList().stream()
+                .map(registration -> {
+                    try {
+                        return lectureRepository.findById(registration.getLectureId());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         boolean isCancelled = false;
-        for (List<LectureRegistration> registrations : studentRegistrations.values()) {
-            if (registrations.removeIf(registration -> registration.getLectureId().equals(choiceLectureId))) {
+        for (Lecture lecture : studentTimetable) {
+            if (lecture.getLectureId().equals(choiceLectureId)) {
+                student.getLectureRegistrationList().removeIf(registration -> registration.getLectureId().equals(choiceLectureId));
+                lecture.getLectureRegistrationList().removeIf(registration -> registration.getStudentId().equals(student.getId()));
+                lectureRepository.save();
+                studentRepository.save();
                 isCancelled = true;
                 break;
             }
         }
 
-        // 취소 여부에 따라 결과 출력
         if (isCancelled) {
-            System.out.println("해당 강의를 수강하고 있지 않습니다.");
-        } else {
             System.out.println("수강이 취소되었습니다.");
+        } else {
+            System.out.println("해당 강의를 수강하고 있지 않습니다.");
         }
 
     }
@@ -197,10 +203,10 @@ public class StudentService {
     public void showStudyRoomStatus(StudyRoom studyRoom) {
         //boolean[][] checkSeat = studyRoom.getCheckSeat();
 
-        for (int i = 0; i < checkSeat.length; i++) {
-            for (int j = 0; j < checkSeat[i].length; j++) {
+        for (int i = 0; i < studyRoom.getCheckSeat().length; i++) {
+            for (int j = 0; j < studyRoom.getCheckSeat()[i].length; j++) {
                 //System.out.print(checkSeat[i][j] ? "O " : "X "); // 예약된 좌석은 "O", 비어있는 좌석은 "X"로 출력
-                System.out.print(checkSeat[i][j] ? reservationMap.get(String.valueOf(i+"-"+j)) : System.out.printf("[%d-%d] ",i+1,j+1));
+                System.out.print(studyRoom.getCheckSeat()[i][j] ? studyRoom.getReservationMap().get(String.valueOf(i+"-"+j)) : System.out.printf("[%d-%d] ",i+1,j+1));
                 // 만약 예약된 좌석이면 map 에서 해당 좌석 번호로 타고 들어가 key 값인 studentId 가져오기
                 // String.valueOf(i+"-"+j)) 이거 아님!!!!
                 // value 를 가지고 key 뽑아낼 수 있나?
@@ -222,12 +228,12 @@ public class StudentService {
         int y = Integer.parseInt(seatInfo[1]) - 1;
 
 
-        if (x < 0 || x >= checkSeat.length || y < 0 || y >= checkSeat[0].length) {
+        if (x < 0 || x >= studyRoom.getCheckSeat().length || y < 0 || y >= studyRoom.getCheckSeat()[0].length) {
             System.out.println("잘못된 좌석 번호입니다.");
             return false;
         }
 
-        if (this.checkSeat[x][y]) { // 좌석이 이미 예약된 경우
+        if (this.studyRoom.getCheckSeat()[x][y]) { // 좌석이 이미 예약된 경우
             System.out.println("이미 예약된 좌석입니다.");
             return false;
         }
@@ -239,10 +245,10 @@ public class StudentService {
         }
 
         // 좌석이 예약 가능한 경우
-        checkSeat[x][y] = true; // 해당 좌석을 예약
-        reservationMap.put(student.getId(), String.valueOf(x * checkSeat[0].length + y));
+        studyRoom.getCheckSeat()[x][y] = true; // 해당 좌석을 예약
+        studyRoom.getReservationMap().put(student.getId(), String.valueOf(x * studyRoom.getCheckSeat()[0].length + y));
         // 학생 아이디와 좌석 번호를 맵에 저장
-        // 근데 student.getId() 가.... 내(지금 접속한 학생) id 만 불러오는게 맞나?
+
         return true; // 예약 성공
 
     }
@@ -250,16 +256,16 @@ public class StudentService {
     // 자습실 예약 취소
     public boolean cancelReservation() {
         String seatNum = sc.nextLine();
-        //Integer seatNumber = Integer.valueOf(studyRoom.getReservationMap().get(studentId)); // 해당 학생의 좌석 번호 가져오기
+
         String[] seatInfo = seatNum.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
         int x = Integer.parseInt(seatInfo[0]) - 1;
         int y = Integer.parseInt(seatInfo[1]) - 1;
 
-        if (reservationMap.containsValue(seatNum)) { // ReservationMap 에 해당 좌석 번호가 들어가 있다면
+        if (studyRoom.getReservationMap().containsValue(seatNum)) { // ReservationMap 에 해당 좌석 번호가 들어가 있다면
             // 이 좌석이 내꺼가 맞는지도 검증해야 하는데...
             // 삭제
-            reservationMap.values().remove(seatNum); // 맵에서 해당 학생의 예약 정보 제거
-            checkSeat[x][y] = false; //  checkSeat 배열에서도 제거
+            studyRoom.getReservationMap().values().remove(seatNum); // 맵에서 해당 학생의 예약 정보 제거
+            studyRoom.getCheckSeat()[x][y] = false; //  checkSeat 배열에서도 제거
         } else {
             System.out.println("해당 좌석은 예약되어 있지 않습니다.");
         }
