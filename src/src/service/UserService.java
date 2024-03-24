@@ -8,6 +8,7 @@ import src.repository.Repository;
 import src.repository.RepositoryProvider;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class UserService {
     private Repository<Student,String> studentRepository;
@@ -45,5 +46,37 @@ public class UserService {
     public Object logout(){
         return null;
     }
+    public void signInStudent(String id, String password, String name, String gender, String phoneNumber, String birthday, String accountNumber, String accountPassword ) throws IOException {
+        Student newStudent = Student.builder()
+                .id(id)
+                .password(password)
+                .name(name)
+                .gender(gender)
+                .phoneNumber(phoneNumber)
+                .birthday(birthday)
+                .accountNumber(accountNumber)
+                .lectureCost(0L)
+                .accountPassword(accountPassword)
+                .lectureRegistrationIdList(new ArrayList<>())
+                .lectureRegistrationList(new ArrayList<>())
+                .build();
+        studentRepository.insert(newStudent);
+        studentRepository.save();
+    }
+    public void signInTeacher(String id, String password, String name, String gender, String phoneNumber, String birthday, String email) throws IOException {
+        Teacher newTeacher = Teacher.builder()
+                .id(id)
+                .password(password)
+                .name(name)
+                .gender(gender)
+                .phoneNumber(phoneNumber)
+                .birthday(birthday)
+                .email(email)
+                .lectureIdList(new ArrayList<>())
+                .lectureIdList(new ArrayList<>())
+                .build();
+        teacherRepository.insert(newTeacher);
+        teacherRepository.save();
 
+    }
 }
