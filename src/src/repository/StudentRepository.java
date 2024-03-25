@@ -28,6 +28,8 @@ public class StudentRepository extends Repository<Student, String>{
         // student객체는 저장 될 때 반드시 lectureRegistrationId 객체를 null값으로 가지면 안된다 -> 생성자에서 생성하기
         Student student = objectMap.get(objectId);
 
+        if(student == null) return null;
+
         if(student.getLectureRegistrationList() == null) {
             student.setLectureRegistrationList(new ArrayList<>());
             for (Long id : student.getLectureRegistrationIdList()) {

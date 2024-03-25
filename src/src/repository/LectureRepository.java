@@ -25,6 +25,8 @@ public class LectureRepository extends Repository<Lecture, String>{
     public Lecture findById(String objectId) {
         Lecture lecture = objectMap.get(objectId);
 
+        if(lecture == null) return null;
+
         if(lecture.getLectureRegistrationList() == null) {
             lecture.setLectureRegistrationList(new ArrayList<>());
             for (Long id : lecture.getLectureRegistrationIdList()) {
