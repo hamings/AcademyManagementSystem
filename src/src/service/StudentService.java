@@ -70,11 +70,11 @@ public class StudentService {
         List<Lecture> allLectures = lectureRepository.findAll();
         // 가져온 강의 목록 처리
         for (Lecture lecture : allLectures) {
-            System.out.print("강의 ID: " + lecture.getLectureId() + "\t");
-            System.out.print("강의 이름: " + lecture.getLectureName() + "\t");
-            System.out.print("강의 요일: " + lecture.getLectureTime() + "\t");
-            System.out.print("강의 시간: " + lecture.getLectureDay() + "\t");
-            System.out.println("강사: " + lecture.getLectureTeacherName() + "\t");
+            System.out.print("강의 ID: " + lecture.getLectureId() + "   ");
+            System.out.print("강의 이름: " + lecture.getLectureName() + "   ");
+            System.out.print("강의 요일: " + intLectureDayToRealDay(lecture.getLectureTime()) + "   "); // 숫자 -> 요일
+            System.out.print("강의 시간: " + intLectureTimeToRealTime(lecture.getLectureTime()) + "   ");  // 숫자 -> realtime
+            System.out.println("강사: " + lecture.getLectureTeacherName() + "   ");
             //System.out.println(); // 강의 사이에 공백 라인 추가
         }
     }
@@ -110,6 +110,21 @@ public class StudentService {
         return null;
     }
 
+    // 강의 시간 숫자를 실제 시간으로 바꿔주는 함수
+    // lectureTime을 숫자로 받으면 각 번호에 맞는 시간으로 리턴
+    String intLectureTimeToRealTime (int lectureTime) {
+        if(lectureTime == 0){
+           return "10:00 ~ 12:00";
+        } else if(lectureTime == 1){
+            return "13:00 ~ 14:50";
+        }  else if(lectureTime == 2){
+            return "15:00 ~ 16:50";
+        }  else if(lectureTime == 3){
+            return "17:00 ~ 19:00";
+        }
+        return null;
+    }
+
 
     // 수강 신청
     public void registerLecture() throws IOException {
@@ -124,7 +139,7 @@ public class StudentService {
             return;
         }
         // 이미 해당 시간에 수강 중인 강의인지 확인
-        //student = studentRepository.findById("koo"); // 테스트용 : 추후 로그인 사용자로 대체 예정
+        student = studentRepository.findById("koo"); // 테스트용 : 추후 로그인 사용자로 대체 예정
         boolean isAlreadyRegistered = student.getLectureRegistrationList().stream()
                 .anyMatch(l -> l.getLectureTime() == pickLecture.getLectureTime());
 
