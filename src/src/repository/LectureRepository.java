@@ -83,7 +83,5 @@ public class LectureRepository extends Repository<Lecture, String>{
     void init() throws IOException {
         objectMap = (Map<String, Lecture>)FileSystem.loadObjectMap(ServiceType.LECTURE);
         lectureRegistrationMap = (Map<Long, LectureRegistration>)FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
-        System.out.println(lectureRegistrationMap);
-
     }
 }

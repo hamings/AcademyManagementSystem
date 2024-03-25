@@ -44,8 +44,6 @@ public class NotificationRepository extends Repository<Queue<Notification>, Stri
         return 0;
     }
 
-
-
     @Override
     boolean support(ServiceType serviceType) {
         return serviceType == ServiceType.NOTIFICATION ? true : false;
