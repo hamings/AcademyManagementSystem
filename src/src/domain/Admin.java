@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class Admin {
+    private static Admin admin = new Admin();
     private String id;
     private String password;
 
@@ -11,9 +12,12 @@ public class Admin {
         this.id = "admin";
         this.password = "admin123";
     }
-    //TODO 내용 수정 필요
+
     public static Admin getInstance(){
-        return new Admin();
+        if(admin==null){
+            admin = new Admin();
+        }
+        return admin;
     }
 
 }
