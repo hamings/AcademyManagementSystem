@@ -55,8 +55,7 @@ public class StudentService {
     public int myOption() {
         // 세 가지 옵션 중 하나 선택 (각 함수로 이동)
         System.out.print("원하시는 서비스의 번호를 입력하세요 : ");
-        int option = Integer.parseInt(sc.nextLine());
-        return option;
+        return Integer.parseInt(sc.nextLine());
     }
 
     // 1. 수강 관리
@@ -85,14 +84,9 @@ public class StudentService {
                 .collect(Collectors.toList());
 
         // 해당 학생 수강 신청 내역 출력
-        if (studentLectureRegistration == null) {
-            // 만약 수강 신청 내역이 없다면
-            System.out.println("수강 신청 내역이 없습니다.");
-        } else {
-            System.out.println("수강 신청 내역");
-            System.out.println(studentLectureRegistration);
+        System.out.println("수강 신청 내역");
+        System.out.println(studentLectureRegistration);
 
-        }
     }
 
     // 강의 요일 (int -> str) 바꿔주는 함수
