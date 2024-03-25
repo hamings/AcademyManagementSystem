@@ -82,7 +82,6 @@ public class AdminService {
             System.out.println("*     " + name + "     *");
             System.out.println("*********************");
         }
-
     }
 
     //수정할 수 있는 수정메뉴 출력
@@ -111,18 +110,27 @@ public class AdminService {
     public void showStudentList() throws IOException {
         List<Student> StudentList = studentRepository.findAll();
 
+        System.out.println("       [학생리스트]     ");
+        System.out.println("***********************");
         for (Student student : StudentList) {
             student.printStudentInformation();
         }
     }
 
-    //1. 학생상세정보출력
-    public void showDetailStudentList() throws IOException {
-        List<Student> StudentList = studentRepository.findAll();
+    //학생아이디가 존재하는지 확인
+    public boolean isExistStudent(String studentId) {
+        return studentRepository.isExist(studentId);
+    }
 
-        for (Student student : StudentList) {
-            student.printDetailStudentInformation();
+    //1. (입력받은 아이디의 학생)상세정보출력
+    public boolean detailStudentInformation(String studentId) throws IOException {
+        Student student = studentRepository.findById(studentId);
+        if(student == null) {
+            System.out.println("입력 아이디에 해당하는 학생정보가 없습니다.");
+            return false;
         }
+        student.printDetailStudentInformation();
+        return true;
     }
 
     //2. 학생정보 수정
@@ -154,16 +162,17 @@ public class AdminService {
     }
 
     //학생정보 삭제
-    public void deleteStudentInformation() throws IOException {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("삭제하실 학생의 아이디를 입력해주세요: ");
-
-        String StudentId = sc.nextLine();//삭제할 학생의 아이디 입력
-        Student targetDeleteStudent = studentRepository.findById(StudentId);
-        studentRepository.delete(targetDeleteStudent);
+    public boolean newDeleteStudentInformation(String studentId) throws IOException {
+        Student student = studentRepository.findById(studentId);
+        if(student == null) {
+            System.out.println("입력 아이디에 해당하는 학생정보가 없습니다.");
+            return false;
+        }
+        studentRepository.delete(student);
         System.out.println("입력하신 학생의정보가 삭제되었습니다.");
 
         studentRepository.save();
+        return true;
     }
 
     //첫번째화면 - 강사정보출력(기능은 아님) - 이름, 아이디만
@@ -175,13 +184,15 @@ public class AdminService {
         }
     }
 
-    //1. 강사상세정보 출력
-    public void showDetailTeacherList() throws IOException {
-        List<Teacher> TeacherList = teacherRepository.findAll();
-
-        for (Teacher teacher : TeacherList) {
-            teacher.printDetailTeacherInformation();
+    //1. (입력받은 아이디의 강사)상세정보출력
+    public boolean detailTeacherInformation(String teacherId) throws IOException {
+        Teacher teacher = teacherRepository.findById(teacherId);
+        if(teacher == null) {
+            System.out.println("입력 아이디에 해당하는 강사정보가 없습니다.");
+            return false;
         }
+        teacher.printDetailTeacherInformation();
+        return true;
     }
 
     //2. 강사정보 수정
@@ -212,6 +223,20 @@ public class AdminService {
         }
     }
 
+    //강사정보 삭제
+    public boolean newDeleteTeacherInformation(String teacherId) throws IOException {
+        Teacher teacher = teacherRepository.findById(teacherId);
+        if(teacher == null) {
+            System.out.println("입력 아이디에 해당하는 강사정보가 없습니다.");
+            return false;
+        }
+        teacherRepository.delete(teacher);
+        System.out.println("입력하신 강사의정보가 삭제되었습니다.");
+
+        teacherRepository.save();
+        return true;
+    }
+
     //첫번째화면 - 강의정보출력(기능은 아님)
     public void showLectureList() throws IOException {
         List<Lecture> LectureList = lectureRepository.findAll();
@@ -228,6 +253,17 @@ public class AdminService {
         for (Lecture lecture : LectureList) {
             lecture.printDetailLectureInformation();
         }
+    }
+
+    //1. (입력받은 아이디의 학생)상세정보출력
+    public boolean detailLectureInformation(String lectureId) throws IOException {
+        Lecture lecture = lectureRepository.findById(lectureId);
+        if(lecture == null) {
+            System.out.println("입력 아이디에 해당하는 학생정보가 없습니다.");
+            return false;
+        }
+        lecture.printDetailLectureInformation();
+        return true;
     }
 
 
@@ -256,6 +292,7 @@ public class AdminService {
 
     //강사 아이디로 강사 이름반환
     public String getTeacherName(String teacherId) throws IOException {
+
         return teacherRepository.findById(teacherId).getName();
     }
 
@@ -269,5 +306,19 @@ public class AdminService {
         lectureRepository.delete(targetDeleteLecture);
         System.out.println("입력하신 강의정보가 삭제되었습니다.");
         lectureRepository.save();
+    }
+
+    //강의정보 삭제
+    public boolean newDeleteLectureInformation(String lectureId) throws IOException {
+        Lecture lecture = lectureRepository.findById(lectureId);
+        if(lecture == null) {
+            System.out.println("입력 아이디에 해당하는 강의정보가 없습니다.");
+            return false;
+        }
+        lectureRepository.delete(lecture);
+        System.out.println("입력하신 강사의정보가 삭제되었습니다.");
+
+        lectureRepository.save();
+        return true;
     }
 }
