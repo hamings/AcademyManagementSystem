@@ -30,7 +30,6 @@ public class StudentService {
     private Repository<Teacher, String> teacherRepository;
 
 
-
     public StudentService() throws IOException {
         this.lectureRepository = RepositoryProvider.getInstance().provide(ServiceType.LECTURE);
         this.lectureRegistrationRepository = RepositoryProvider.getInstance().provide(ServiceType.LECTURE);
@@ -39,6 +38,7 @@ public class StudentService {
         this.teacherRepository = RepositoryProvider.getInstance().provide(ServiceType.TEACHER);
 
     }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     Student student = new Student();
     StudyRoom studyRoom = new StudyRoom();
@@ -70,7 +70,7 @@ public class StudentService {
         // lectureRepository 에서 findAll() 메서드 호출
         List<Lecture> allLectures = lectureRepository.findAll();
         // 가져온 강의 목록 처리
-        for(Lecture lecture : allLectures) {
+        for (Lecture lecture : allLectures) {
             System.out.print("강의 ID: " + lecture.getLectureId() + "\t");
             System.out.print("강의 이름: " + lecture.getLectureName() + "\t");
             System.out.print("강의 요일: " + lecture.getLectureTime() + "\t");
@@ -98,6 +98,7 @@ public class StudentService {
 
         }
     }
+
     // 수강 신청
     public void registerLecture(Student student, Lecture lecture) throws IOException {
         // 원하는 강의 고르기
@@ -135,9 +136,9 @@ public class StudentService {
             lectureRepository.save();
             //studentRegistrations.put(student.getId(), lecture.getLectureRegistrationList());
             System.out.println("수강 신청이 완료되었습니다.");
-        } else {
+            student.setLectureCost(student.getLectureCost() + 100000L);
+        } else
             System.out.println("이미 해당 시간에 다른 강의를 수강 중입니다.");
-        }
     }
 
     // 수강 취소
