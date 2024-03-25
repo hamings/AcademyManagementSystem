@@ -54,7 +54,6 @@ public class StudentRepository extends Repository<Student, String>{
                 student.setLectureRegistrationList(new ArrayList<>());
 
                 for (Long id : student.getLectureRegistrationIdList()) {
-                    System.out.println(lectureRegistrationMap.get(id).getLectureId());
                     student.getLectureRegistrationList().add(lectureRegistrationMap.get(id));
                 }
             }

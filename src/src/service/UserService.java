@@ -76,7 +76,7 @@ public class UserService {
                 .birthday(birthday)
                 .email(email)
                 .lectureIdList(new ArrayList<>())
-                .lectureIdList(new ArrayList<>())
+                .lectureList(new ArrayList<>())
                 .build();
         teacherRepository.insert(newTeacher);
         teacherRepository.save();
