@@ -1,10 +1,7 @@
 package src.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -15,7 +12,6 @@ import src.domain.Notification;
 import src.domain.Student;
 import src.domain.StudyRoom;
 import src.domain.Teacher;
-import src.repository.LectureRepository;
 import src.repository.Repository;
 import src.repository.RepositoryProvider;
 
@@ -99,6 +95,23 @@ public class StudentService {
         }
     }
 
+    // 강의 요일 (int -> str) 바꿔주는 함수
+    String intLectureDayToRealDay (int lectureDay) {
+        if(lectureDay == 0){
+            return "월요일";
+        } else if(lectureDay == 1){
+            return "화요일";
+        }  else if(lectureDay == 2){
+            return "수요일";
+        }  else if(lectureDay == 3){
+            return "목요일";
+        } else if(lectureDay == 4){
+            return "금요일";
+        }
+        return null;
+    }
+
+
     // 수강 신청
     public void registerLecture(Student student, Lecture lecture) throws IOException {
         // 원하는 강의 고르기
@@ -120,7 +133,7 @@ public class StudentService {
             LectureRegistration lectureRegistration = new LectureRegistration();
             lectureRegistration.setLectureId(lecture.getLectureId());
             lectureRegistration.setStudentId(student.getId());
-            lectureRegistration.setLectureDay(lecture.getLectureDay());
+            lectureRegistration.setLectureDay(intLectureDayToRealDay(pickLecture.getLectureDay()));
             lectureRegistration.setLectureTime(lecture.getLectureTime());
 
             student.getLectureRegistrationList().add(lectureRegistration);
