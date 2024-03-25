@@ -95,5 +95,8 @@ public class ValidationSystem {
         if(!isValid) return false;
         return true;
     }
+    public static boolean isValidGender(String input){
+        return input.equalsIgnoreCase("Female") ||input.equalsIgnoreCase("Male");
+    }
 
 }
