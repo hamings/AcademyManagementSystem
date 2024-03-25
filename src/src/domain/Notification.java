@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
+
 public class Notification  implements Serializable {
     private int notificationId;//알림아이디
     private int checkCount;//읽은 카운트 수
@@ -16,8 +16,6 @@ public class Notification  implements Serializable {
     private String studentId;//학생 아이디
     private LocalDateTime date;//발송날짜
     private Long balance;//학생계좌잔액
-    private int successStudent = 0;
-    private int totalStudent = 0;
 
     public Notification(int notificationId, int checkCount, String adminContent, String studentContent, String studentId, LocalDateTime date, Long balance) {
         this.notificationId = notificationId;
