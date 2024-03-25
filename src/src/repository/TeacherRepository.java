@@ -19,16 +19,6 @@ public class TeacherRepository extends Repository<Teacher, String>{
     private Map<Long, LectureRegistration> lectureRegistrationMap;
 
 
-    public Teacher findByIdLazyLoading(String objectId) {
-        // 관리자 사용 쿼리메서드
-        Teacher teacher = objectMap.get(objectId);
-        teacher.setLectureList(new ArrayList<>());
-        for(String id : teacher.getLectureIdList()) {
-            teacher.getLectureList().add(lectureMap.get(id));
-        }
-        return teacher;
-    }
-
     @Override
     public boolean isExist(String objectId) {
         if(objectMap.get(objectId) != null) return true;
@@ -40,19 +30,24 @@ public class TeacherRepository extends Repository<Teacher, String>{
         lectureRegistrationMap = FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
 
         Teacher teacher = objectMap.get(objectId);
+        if(teacher == null) return null;
+
         if(teacher.getLectureList() == null) {
+            // 캐시 -> 이미 조회한 엔티티의 내용을 다시 바인딩 할 필요가 없음.
             teacher.setLectureList(new ArrayList<>());
             for (String id : teacher.getLectureIdList()) {
-                Lecture l = lectureMap.get(id);
-                if (l == null) continue;
+                Lecture lecture = lectureMap.get(id);
+                if (lecture == null) continue;
 
-                teacher.getLectureList().add(l);
-                lectureMap.get(id).setLectureRegistrationList(
+                lecture.setLectureRegistrationList(new ArrayList<>());
+
+                lecture.setLectureRegistrationList(
                         lectureRegistrationMap.entrySet().stream()
                                 .filter(e -> e.getValue().getLectureId().equals(id))
                                 .map(e -> e.getValue())
                                 .collect(Collectors.toList())
                 );
+                teacher.getLectureList().add(lecture);
             }
         }
         return teacher;
@@ -67,9 +62,11 @@ public class TeacherRepository extends Repository<Teacher, String>{
                 .collect(Collectors.toList());
 
         for(Teacher teacher : teacherList) {
-            teacher.setLectureList(new ArrayList<>());
-            for(String id : teacher.getLectureIdList()) {
-                teacher.getLectureList().add(lectureMap.get(id));
+            if(teacher.getLectureList() == null) {
+                teacher.setLectureList(new ArrayList<>());
+                for (String id : teacher.getLectureIdList()) {
+                    teacher.getLectureList().add(lectureMap.get(id));
+                }
             }
         }
 
