@@ -7,6 +7,7 @@ import java.util.Queue;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import javax.management.QueryEval;
 import src.ServiceType;
 import src.domain.Lecture;
 import src.domain.LectureRegistration;
@@ -69,6 +70,8 @@ public class StudentService {
     public void showAllLectureList() throws IOException {
         // lectureRepository 에서 findAll() 메서드 호출
         List<Lecture> allLectures = lectureRepository.findAll();
+        System.out.println("[수강 가능한 강의 목록]");
+        System.out.println("-----------------------------------------------------------------------------------------------------");
         // 가져온 강의 목록 처리
         for (Lecture lecture : allLectures) {
             System.out.print("강의 ID: " + lecture.getLectureId() + "   ");
@@ -78,28 +81,35 @@ public class StudentService {
             System.out.println("강사: " + lecture.getLectureTeacherName() + "   ");
             //System.out.println(); // 강의 사이에 공백 라인 추가
         }
+        System.out.println("-----------------------------------------------------------------------------------------------------");
+        System.out.println();
     }
 
 
     // 수강 신청 내역 가져와 출력
-    public void showStudentAllRegistrationLecture() throws IOException {
+    public boolean showStudentAllRegistrationLecture() throws IOException {
         //수강 신청 내역 가져오기
         //필터링 (해당 학생의 수강 신청 내역)
         List<LectureRegistration> studentLectureRegistration = lectureRegistrationRepository.findAll().stream()
                 .filter(registration -> registration.getStudentId().equals(student.getId()))
                 .collect(Collectors.toList());
 
-        // 해당 학생 수강 신청 내역 출력
-        System.out.println("수강 신청 내역");
-        for(LectureRegistration lectureRegistration : studentLectureRegistration){
-            System.out.println("수강신청ID: "+lectureRegistration.getId() +", 강의ID: "+lectureRegistration.getLectureId()
-                    +", 학생ID: "+lectureRegistration.getStudentId()+", 강의요일: "+lectureRegistration.getLectureDay()+
-                    ", 강의시간: "+intLectureTimeToRealTime(lectureRegistration.getLectureTime()));
-
+        if(studentLectureRegistration.isEmpty()) {
+            System.out.println("수강 신청 내역이 존재하지 않습니다.");
+            return false;
         }
-
-
+        // 해당 학생 수강 신청 내역 출력
+        System.out.println("[수강 신청 내역]");
+        for(LectureRegistration lectureRegistration : studentLectureRegistration) {
+            System.out.println(
+                    "수강신청ID: " + lectureRegistration.getId() + ", 강의ID: " + lectureRegistration.getLectureId()
+                            + ", 학생ID: " + lectureRegistration.getStudentId() + ", 강의요일: "
+                            + lectureRegistration.getLectureDay() +
+                            ", 강의시간: " + intLectureTimeToRealTime(lectureRegistration.getLectureTime()));
+        }
+        return true;
     }
+
 
     // 강의 요일 (int -> str) 바꿔주는 함수
     // lectureDay를 숫자로 받으면 각 번호에 맞는 요일로 리턴
@@ -156,14 +166,14 @@ public class StudentService {
             lectureRegistration.setLectureDay(intLectureDayToRealDay(pickLecture.getLectureDay()));
             lectureRegistration.setLectureTime(pickLecture.getLectureTime());
 
+            lectureRegistrationRepository.insert(lectureRegistration);
+            lectureRegistrationRepository.save();
+
             student.getLectureRegistrationList().add(lectureRegistration);
             student.getLectureRegistrationIdList().add(lectureRegistration.getId());
 
             pickLecture.getLectureRegistrationList().add(lectureRegistration);
             pickLecture.getLectureRegistrationIdList().add(lectureRegistration.getId());
-
-            lectureRegistrationRepository.insert(lectureRegistration);
-            lectureRegistrationRepository.save();
 
             studentRepository.save();
             lectureRepository.save();
@@ -181,7 +191,7 @@ public class StudentService {
 
         boolean isCancelled = false;
         for (LectureRegistration lectureRegistration : studentTimetable) {
-            if (lectureRegistration.getLectureId().equals((lectureId))) {
+            if (lectureRegistration.getLectureId().equals(lectureId)) {
                 lectureRegistrationRepository.delete(lectureRegistration);
                 lectureRegistrationRepository.save();
                 isCancelled = true;
@@ -228,10 +238,18 @@ public class StudentService {
         System.out.println("*****************************************");
     }
 
+    public boolean isExistResevation(){
+        if (studyRoom.getReservationMap().containsKey(student.getId())) {
+            System.out.println("당일 이미 예약된 좌석이 있습니다.");
+            return true;
+        }
+        return false;
+    }
 
     // 좌석 예약
     // 좌석 번호 입력 후 예약 가능 여부 확인
     public boolean isPossibleReserve(String choiceSeat) {
+        // 이미 예약 기록이 있을 때, '당일 이미 예약된 좌석이 있습니다.' 출력
         System.out.println();
         int x = -1;
         int y = -1;
@@ -276,12 +294,23 @@ public class StudentService {
         return true; // 예약 성공
 
     }
-
+//
     // 자습실 예약 취소
     public boolean cancelReservation(String seatNum) {
-        String[] seatInfo = seatNum.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
-        int x = Integer.parseInt(seatInfo[0]) - 1;
-        int y = Integer.parseInt(seatInfo[1]) - 1;
+        int x = -1;
+        int y = -1;
+        try {
+            String[] seatInfo2 = seatNum.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
+            x = Integer.parseInt(seatInfo2[0]) - 1;
+            y = Integer.parseInt(seatInfo2[1]) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("잘못된 형식의 좌석 번호입니다.");
+            return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("좌석 번호가 유효하지 않습니다.");
+            return false;
+        }
+
 
         // 좌석 번호 유효성 검사
         if (x < 0 || x >= studyRoom.getCheckSeat().length || y < 0 || y >= studyRoom.getCheckSeat()[0].length) {
@@ -302,6 +331,8 @@ public class StudentService {
             return false;
         }
     }
+
+    // 3. 알림함
     //학생알림함 제공
     public void checkNotification() throws IOException {
         System.out.println("checkNo");
