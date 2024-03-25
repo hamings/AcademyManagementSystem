@@ -26,12 +26,6 @@ public class LectureRegistrationRepository extends Repository<LectureRegistratio
         return objectMap.get(objectId);
     }
 
-    private List<LectureRegistration> findAllByLectureId(String lectureId) {
-        return objectMap.entrySet().stream()
-                .filter(e -> e.getValue().getLectureId().equals(lectureId))
-                .map(e -> e.getValue())
-                .collect(Collectors.toList());
-    }
     @Override
     public List<LectureRegistration> findAll() {
         return objectMap.entrySet().stream()
