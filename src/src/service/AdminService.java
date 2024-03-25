@@ -24,12 +24,20 @@ public class AdminService {
     private Repository<Lecture,String> lectureRepository;
     private Repository<Notification,String> notificationRepository;
     private Bank bank = new Bank();
+    private Admin admin;
 
     public AdminService() throws IOException {
         this.studentRepository = RepositoryProvider.getInstance().provide(ServiceType.STUDENT);
         this.teacherRepository = RepositoryProvider.getInstance().provide(ServiceType.TEACHER);
         this.lectureRepository = RepositoryProvider.getInstance().provide(ServiceType.LECTURE);
         this.notificationRepository = RepositoryProvider.getInstance().provide(ServiceType.NOTIFICATION);
+    }
+
+    public Admin getAdmin(){
+        return this.admin;
+    }
+    public void setAdmin(Admin admin){
+        this.admin = admin;
     }
 
     //학원결제시스템
@@ -178,7 +186,6 @@ public class AdminService {
     //첫번째화면 - 강사정보출력(기능은 아님) - 이름, 아이디만
     public void showTeacherList() throws IOException {
         List<Teacher> TeacherList = teacherRepository.findAll();
-
         for (Teacher teacher : TeacherList) {
             teacher.printTeacherInformation();
         }
