@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import src.ServiceType;
 import src.domain.Lecture;
@@ -24,20 +25,23 @@ public class StudentService {
     private Repository<Notification, Integer> notificationRepository;
     private Repository<Student, String> studentRepository;
     private Repository<Teacher, String> teacherRepository;
+    private StudyRoom studyRoom;
+    Student student;
+    Lecture lecture;
+
 
 
     public StudentService() throws IOException {
         this.lectureRepository = RepositoryProvider.getInstance().provide(ServiceType.LECTURE);
-        this.lectureRegistrationRepository = RepositoryProvider.getInstance().provide(ServiceType.LECTURE);
+        this.lectureRegistrationRepository = RepositoryProvider.getInstance().provide(ServiceType.LECTUREREGISTRATION);
         this.notificationRepository = RepositoryProvider.getInstance().provide(ServiceType.NOTIFICATION);
         this.studentRepository = RepositoryProvider.getInstance().provide(ServiceType.STUDENT);
         this.teacherRepository = RepositoryProvider.getInstance().provide(ServiceType.TEACHER);
-
+        this.studyRoom = new StudyRoom();
+        student = studentRepository.findById("koo");
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    Student student = new Student();
-    StudyRoom studyRoom = new StudyRoom();
     Scanner sc = new Scanner(System.in);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +75,7 @@ public class StudentService {
             System.out.print("강의 요일: " + lecture.getLectureTime() + "\t");
             System.out.print("강의 시간: " + lecture.getLectureDay() + "\t");
             System.out.println("강사: " + lecture.getLectureTeacherName() + "\t");
-            System.out.println(); // 강의 사이에 공백 라인 추가
+            //System.out.println(); // 강의 사이에 공백 라인 추가
         }
     }
 
@@ -108,7 +112,7 @@ public class StudentService {
 
 
     // 수강 신청
-    public void registerLecture(Student student, Lecture lecture) throws IOException {
+    public void registerLecture() throws IOException {
         // 원하는 강의 고르기
         System.out.print("수강하고자 하는 강의의 강의 id를 입력해주세요: ");
         String choiceLectureId = sc.nextLine();
@@ -120,6 +124,7 @@ public class StudentService {
             return;
         }
         // 이미 해당 시간에 수강 중인 강의인지 확인
+        //student = studentRepository.findById("koo"); // 테스트용 : 추후 로그인 사용자로 대체 예정
         boolean isAlreadyRegistered = student.getLectureRegistrationList().stream()
                 .anyMatch(l -> l.getLectureTime() == pickLecture.getLectureTime());
 
@@ -134,6 +139,7 @@ public class StudentService {
             student.getLectureRegistrationList().add(lectureRegistration);
             student.getLectureRegistrationIdList().add(lectureRegistration.getId());
 
+            lecture = lectureRepository.findById(choiceLectureId);
             lecture.getLectureRegistrationList().add(lectureRegistration);
             lecture.getLectureRegistrationIdList().add(lectureRegistration.getId());
 
@@ -151,6 +157,7 @@ public class StudentService {
 
     // 수강 취소
     public void deleteLecture() throws IOException {
+        //student = studentRepository.findById("koo"); // 테스트용 : 추후 로그인 사용자로 대체 예정
         // 내 시간표 보여주기
         try {
             System.out.println(studentRepository.findById(student.getId()));
@@ -159,28 +166,17 @@ public class StudentService {
         }
 
         // 취소하고자 하는 강의 고르기
-        System.out.print("취소하고자 하는 강의의 강의 id를 입력해주세요: ");
-        String choiceLectureId = sc.nextLine();
+        System.out.print("취소하고자 하는 강의를 입력해주세요: ");
+        String lectureId = sc.nextLine();
 
         // 내 시간표에 해당 id 강의가 있는지 확인 후 삭제 또는 취소 실패 문구 출력
-        List<Lecture> studentTimetable = student.getLectureRegistrationList().stream()
-                .map(registration -> {
-                    try {
-                        return lectureRepository.findById(registration.getLectureId());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        List<LectureRegistration> studentTimetable = student.getLectureRegistrationList();
 
         boolean isCancelled = false;
-        for (Lecture lecture : studentTimetable) {
-            if (lecture.getLectureId().equals(choiceLectureId)) {
-                student.getLectureRegistrationList().removeIf(registration -> registration.getLectureId().equals(choiceLectureId));
-                lecture.getLectureRegistrationList().removeIf(registration -> registration.getStudentId().equals(student.getId()));
-                lectureRepository.save();
-                studentRepository.save();
+        for (LectureRegistration lectureRegistration : studentTimetable) {
+            if (lectureRegistration.getLectureId().equals((lectureId))) {
+                lectureRegistrationRepository.delete(lectureRegistration);
+                lectureRegistrationRepository.save();
                 isCancelled = true;
                 break;
             }
@@ -205,14 +201,16 @@ public class StudentService {
     }
 
     // 자습실 좌석표 출력
-    public void showStudyRoomStatus(StudyRoom studyRoom) {
+    public void showStudyRoom() {
         //boolean[][] checkSeat = studyRoom.getCheckSeat();
-
+        String reservationInformation = studyRoom.getReservationMap().getOrDefault(student.getId(), "");
         for (int i = 0; i < studyRoom.getCheckSeat().length; i++) {
             for (int j = 0; j < studyRoom.getCheckSeat()[i].length; j++) {
                 // 예약된 좌석은 'X', 예약 가능한 좌석은 좌석 번호 표시
                 if (studyRoom.getCheckSeat()[i][j]) {
-                    System.out.printf("[%s] ", studyRoom.getReservationMap().getOrDefault(String.valueOf(i * studyRoom.getCheckSeat()[0].length + j), "X"));
+                    // 예약좌석이 내 좌석인지 다른 사람 좌석인지 체크
+                    if(reservationInformation.equals((i+1) + "-" + (j+1))) System.out.printf("[%s] ", "내좌석");
+                    else System.out.printf("[%s] ", "X");
                 } else {
                     System.out.printf("[%d-%d] ", i + 1, j + 1);
                 }
@@ -221,6 +219,7 @@ public class StudentService {
         }
         System.out.println("*****************************************");
     }
+
 
     // 좌석 예약
     // 좌석 번호 입력 후 예약 가능 여부 확인
@@ -239,7 +238,7 @@ public class StudentService {
         }
 
         // 좌석이 이미 예약된 경우
-        if (this.studyRoom.getCheckSeat()[x][y]) {
+        if (studyRoom.getCheckSeat()[x][y]) {
             System.out.println("이미 예약된 좌석입니다.");
             return false;
         }
@@ -248,20 +247,24 @@ public class StudentService {
         if (studyRoom.getReservationMap().containsKey(student.getId())) {
             System.out.println("이미 예약한 좌석이 있습니다.");
             System.out.println("예약한 좌석 : " + studyRoom.getReservationMap().get(student.getId()));
+            return false;
         }
 
         // 예약 가능한 경우 (잘못된 좌석 번호 X, 이미 예약된 좌석 X, 당일 예약 기록 X)
         // 해당 좌석 예약
         studyRoom.getCheckSeat()[x][y] = true;
         // 학생 아이디와 좌석 번호 맵에 저장
-        studyRoom.getReservationMap().put(student.getId(), String.valueOf(x * studyRoom.getCheckSeat()[0].length + y));
+        studyRoom.getReservationMap().put(student.getId(), String.valueOf(choiceSeat));
+
         System.out.println("좌석이 성공적으로 예약되었습니다.");
+
         return true; // 예약 성공
 
     }
 
     // 자습실 예약 취소
     public boolean cancelReservation() {
+        System.out.println("취소를 원하는 좌석 번호를 입력하세요(ex: 1-1) : ");
         String seatNum = sc.nextLine();
 
         String[] seatInfo = seatNum.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
