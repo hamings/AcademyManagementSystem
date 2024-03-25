@@ -70,6 +70,8 @@ public class StudentService {
     public void showAllLectureList() throws IOException {
         // lectureRepository 에서 findAll() 메서드 호출
         List<Lecture> allLectures = lectureRepository.findAll();
+        System.out.println("[수강 가능한 강의 목록]");
+        System.out.println("-----------------------------------------------------------------------------------------------------");
         // 가져온 강의 목록 처리
         for (Lecture lecture : allLectures) {
             System.out.print("강의 ID: " + lecture.getLectureId() + "   ");
@@ -79,11 +81,13 @@ public class StudentService {
             System.out.println("강사: " + lecture.getLectureTeacherName() + "   ");
             //System.out.println(); // 강의 사이에 공백 라인 추가
         }
+        System.out.println("-----------------------------------------------------------------------------------------------------");
+        System.out.println();
     }
 
 
     // 수강 신청 내역 가져와 출력
-    public void showStudentAllRegistrationLecture() throws IOException {
+    public boolean showStudentAllRegistrationLecture() throws IOException {
         //수강 신청 내역 가져오기
         //필터링 (해당 학생의 수강 신청 내역)
         List<LectureRegistration> studentLectureRegistration = lectureRegistrationRepository.findAll().stream()
@@ -92,27 +96,19 @@ public class StudentService {
 
         if(studentLectureRegistration.isEmpty()) {
             System.out.println("수강 신청 내역이 존재하지 않습니다.");
-            return;
+            return false;
         }
         // 해당 학생 수강 신청 내역 출력
-        System.out.println("수강 신청 내역");
-        for(LectureRegistration lectureRegistration : studentLectureRegistration){
-            System.out.println("수강신청ID: "+lectureRegistration.getId() +", 강의ID: "+lectureRegistration.getLectureId()
-                    +", 학생ID: "+lectureRegistration.getStudentId()+", 강의요일: "+lectureRegistration.getLectureDay()+
-                    ", 강의시간: "+intLectureTimeToRealTime(lectureRegistration.getLectureTime()));
+        System.out.println("[수강 신청 내역]");
+        for(LectureRegistration lectureRegistration : studentLectureRegistration) {
+            System.out.println(
+                    "수강신청ID: " + lectureRegistration.getId() + ", 강의ID: " + lectureRegistration.getLectureId()
+                            + ", 학생ID: " + lectureRegistration.getStudentId() + ", 강의요일: "
+                            + lectureRegistration.getLectureDay() +
+                            ", 강의시간: " + intLectureTimeToRealTime(lectureRegistration.getLectureTime()));
         }
+        return true;
     }
-
-//        // 해당 학생 수강 신청 내역 출력
-//        System.out.println("수강 신청 내역");
-//        for(LectureRegistration lectureRegistration : studentLectureRegistration){
-//            System.out.println("수강신청ID: "+lectureRegistration.getId() +", 강의ID: "+lectureRegistration.getLectureId()
-//                    +", 학생ID: "+lectureRegistration.getStudentId()+", 강의요일: "+lectureRegistration.getLectureDay()+
-//                    ", 강의시간: "+intLectureTimeToRealTime(lectureRegistration.getLectureTime()));
-//
-//        }
-
-
 
 
     // 강의 요일 (int -> str) 바꿔주는 함수

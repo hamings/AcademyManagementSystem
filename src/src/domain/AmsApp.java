@@ -62,10 +62,12 @@ public class AmsApp {
                                     studentService.registerLecture(choiceLectureId);
                                     break;
                                 }else if (num.equals("2")){ //수강신청 취소
-                                    studentService.showStudentAllRegistrationLecture();
-                                    System.out.println("취소하고자 하는 강의를 입력해주세요: ");
-                                    String lectureId = scanner.nextLine();
-                                    studentService.deleteLecture(lectureId);
+                                    if(studentService.showStudentAllRegistrationLecture()){
+                                        System.out.println("취소하고자 하는 강의의 강의 id를 입력해주세요: ");
+                                        String lectureId = scanner.nextLine();
+                                        studentService.deleteLecture(lectureId);
+                                    }
+
                                 }else if(num.equals("3")){
                                     studentService.showStudentAllRegistrationLecture();
                                 }else{
@@ -79,9 +81,11 @@ public class AmsApp {
                                 studentService.showStudyRoomMenu();
                                 num = scanner.nextLine();
                                 if(num.equals("1")){
-                                    System.out.print("예약을 원하는 좌석 번호를 입력하세요(ex: 1-1) : ");
-                                    String choiceSeat = scanner.nextLine();
-                                    studentService.isPossibleReserve(choiceSeat);
+                                    if(!studentService.isExistResevation()) {
+                                        System.out.print("예약을 원하는 좌석 번호를 입력하세요(ex: 1-1) : ");
+                                        String choiceSeat = scanner.nextLine();
+                                        studentService.isPossibleReserve(choiceSeat);
+                                    }
                                 }else if(num.equals("2")){
                                     System.out.print("취소를 원하는 좌석 좌석 번호를 입력하세요(ex: 1-1) : ");
                                     String seatNum = scanner.nextLine();
