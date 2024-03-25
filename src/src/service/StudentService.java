@@ -96,6 +96,7 @@ public class StudentService {
     }
 
     // 강의 요일 (int -> str) 바꿔주는 함수
+    // lectureDay를 숫자로 받으면 각 번호에 맞는 요일로 리턴
     String intLectureDayToRealDay (int lectureDay) {
         if(lectureDay == 0){
             return "월요일";
