@@ -48,7 +48,8 @@ public class Student  implements Serializable {
 
     //학생이름, 학생아이디 출력
     public void printStudentInformation(){
-        System.out.println("이름: " + name + ", 아이디: " + id);
+        System.out.println("이름: " + name + ", 아이디: " + id );
+        System.out.println("***********************");
     }
 
     public void printDetailStudentInformation(){
