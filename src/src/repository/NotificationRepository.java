@@ -13,7 +13,8 @@ import java.util.Queue;
 public class NotificationRepository extends Repository<Queue<Notification>, String>{
     @Override
     public boolean isExist(String objectId) {
-        return false;
+        if(objectMap.get(objectId) == null) return false;
+        else return true;
     }
 
     @Override
