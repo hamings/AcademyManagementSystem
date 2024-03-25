@@ -27,7 +27,7 @@ public class Application {
     public static void main(String[] args) throws IOException {
 
         //initTestSet();
-        adminService.showDetailLectureList();
+        registerLecture();
 
 
 //        Map<Integer, Notification> notificationMap = FileSystem.loadObjectMap(ServiceType.NOTIFICATION);
@@ -42,8 +42,6 @@ public class Application {
         1. 수강신청 예시
 
          */
-
-
     }
 
 
@@ -56,7 +54,7 @@ public class Application {
         student.setGender("Male");
         student.setBirthday("1999");
         student.setName("구태호");
-        student.setAccountNumber("1234");
+        student.setAccountNumber("111-11-1");
         student.setAccountPassword("1111");
         student.setPhoneNumber("01000000000");
         student.setLectureRegistrationIdList(new ArrayList<>());
@@ -68,14 +66,27 @@ public class Application {
         student2.setGender("Male");
         student2.setBirthday("1999");
         student2.setName("김민수");
-        student2.setAccountNumber("5678");
+        student2.setAccountNumber("222-22-2");
         student2.setAccountPassword("1111");
         student2.setPhoneNumber("01022222222");
         student2.setLectureRegistrationIdList(new ArrayList<>());
         student2.getLectureRegistrationIdList().add(1L);
 
+        Student student3 = new Student("koo","Male","1999","구태호","1234","1111","01000000000","23" +
+                5000L);
+        student3.setId("lee");
+        student3.setGender("Male");
+        student3.setBirthday("1999");
+        student3.setName("최민수");
+        student3.setAccountNumber("333-33-3");
+        student3.setAccountPassword("1111");
+        student3.setPhoneNumber("01022222222");
+        student3.setLectureRegistrationIdList(new ArrayList<>());
+        student3.getLectureRegistrationIdList().add(1L);
+
         studentMap.put(student.getId(), student);
         studentMap.put(student2.getId(), student2);
+        studentMap.put(student3.getId(), student3);
         FileSystem.saveObjectMap(ServiceType.STUDENT, studentMap);
 
         Map<String, Teacher> teacherMap = new HashMap<>();
@@ -291,8 +302,69 @@ public class Application {
         }
 
         adminService.newEditTeacherInformation(teacherId, option, value);
+
     }
 
+    public static void registerLecture() throws IOException {
+        Scanner sc = new Scanner(System.in);
 
+        System.out.println("**신규 강의 정보 등록**");
+
+        System.out.print("[강의 이름]: ");
+        String name = sc.nextLine();
+
+
+        System.out.println("[강의 요일]");
+        System.out.println("[0]: 월요일 [1]: 화요일 [2]: 수요일 [3]: 목요일 [4]: 금요일");
+        System.out.print("입력: ");
+        int day = -1;
+        boolean dayCheck = false;
+        while(!dayCheck){
+            int intputDay = Integer.parseInt(sc.nextLine());
+            if(0<=intputDay && intputDay<5){
+                day = intputDay;
+                dayCheck = true;
+                break;
+            } else{
+                System.out.print("올바른 번호를 입력해주세요: ");
+            }
+        }
+
+        System.out.println("[강의 시간]");
+        System.out.println("[0] 10:00 ~ 12:00 [1] 13:00 ~ 14:50 [2] 15:00 ~ 16:50 [3] 17:00 ~ 19:00");
+        System.out.print("입력: ");
+        int time = -1;
+        boolean timeCheck = false;
+        while(!timeCheck){
+            int inputTime = Integer.parseInt(sc.nextLine());
+            if(0<=inputTime && inputTime<4){
+                time = inputTime;
+                timeCheck = true;
+                break;
+            } else{
+                System.out.print("올바른 번호를 입력해주세요: ");
+            }
+        }
+
+        String teacherId = "";
+        String teacherName = "";
+        boolean isTeacherExist = false;
+
+
+        while (!isTeacherExist) {
+            System.out.print("[담당 강사 아이디]: ");
+            teacherId = sc.nextLine();
+            isTeacherExist = adminService.isExistTeacher(teacherId);
+            //lectureRepository있으면,
+            // teacherFound = lectureRepository.isExist(teacherId);
+
+            if (isTeacherExist) {
+                adminService.registerLecture(name, day, time, teacherName, teacherId);
+                System.out.println("강의가 성공적으로 등록되었습니다.");
+            } else {
+                System.out.println("해당 아이디의 강사님은 존재하지 않습니다. 다시 입력해주세요.");
+            }
+        }
+    }
 
 }
