@@ -52,12 +52,19 @@ public class LectureRegistrationRepository extends Repository<LectureRegistratio
         Student student = studentMap.get(object.getStudentId());
         Lecture lecture = lectureMap.get(object.getLectureId());
 
-        student.getLectureRegistrationIdList().remove(object.getLectureId());
-        lecture.getLectureRegistrationIdList().remove(object.getLectureId());
+
+
+        int idx = student.getLectureRegistrationIdList().indexOf(object.getId());
+        student.getLectureRegistrationIdList().remove(idx);
+
+        idx = lecture.getLectureRegistrationIdList().indexOf(object.getId());
+        lecture.getLectureRegistrationIdList().remove(idx);
         if(student.getLectureRegistrationList() != null) student.getLectureRegistrationList().remove(object);
         if(lecture.getLectureRegistrationList() != null) lecture.getLectureRegistrationList().remove(object);
 
-        objectMap.remove(object.getLectureId());
+        FileSystem.saveObjectMap(ServiceType.LECTURE, lectureMap);
+        FileSystem.saveObjectMap(ServiceType.STUDENT, studentMap);
+        objectMap.remove(object.getId());
         return 1;
     }
 
@@ -69,5 +76,6 @@ public class LectureRegistrationRepository extends Repository<LectureRegistratio
     @Override
     void init() throws IOException {
         objectMap = (Map<Long, LectureRegistration>) FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
+
     }
 }
