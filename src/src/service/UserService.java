@@ -26,6 +26,7 @@ public class UserService {
         if(student!=null && student.getPassword().equals(pw)){
             return student;
         }
+        System.out.println("로그인 실패");
         return null;
 
     }
@@ -34,6 +35,7 @@ public class UserService {
         if(teacher!=null && teacher.getPassword().equals(pw)){
             return teacher;
         }
+        System.out.println("로그인 실패");
         return null;
 
     }
@@ -41,6 +43,7 @@ public class UserService {
         if(admin.getId().equals(id)&&admin.getPassword().equals(pw)){
             return admin;
         }
+        System.out.println("로그인 실패");
         return null;
     }
     public Object logout(){
@@ -78,5 +81,11 @@ public class UserService {
         teacherRepository.insert(newTeacher);
         teacherRepository.save();
 
+    }
+    public boolean isExistStudent(String studentId){
+        return studentRepository.isExist(studentId);
+    }
+    public boolean isExistTeacher(String teacherId){
+        return teacherRepository.isExist(teacherId);
     }
 }
