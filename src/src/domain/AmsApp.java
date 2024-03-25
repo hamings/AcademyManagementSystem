@@ -28,11 +28,6 @@ public class AmsApp {
     }
     public void run() throws IOException {
         do {
-
-            Repository<Teacher, String> teacherRepository = RepositoryProvider.getInstance().provide(ServiceType.TEACHER);
-            for (Teacher t : teacherRepository.findAll()) {
-                System.out.println(t);
-            }
             //ams 오신것을 환영합니다 print
             System.out.println("ams");
 
@@ -45,8 +40,12 @@ public class AmsApp {
                 System.out.println("1.학생, 2.강사, 3.관리자  \n 번호를 선택하세요");
                 //번호 선택해주세요
                 num = scanner.nextLine();
-                login(num);
-                System.out.println(studentService.getStudent());
+                if(num.equals("1")||num.equals("2")||num.equals("3")) {
+                    login(num);
+                }else{
+                    System.out.println("올바르지 않은 번호입니다.");
+                    continue;
+                }
                 if (num.equals("1")) { //학생 서비스
                     while (studentService.getStudent()!=null) {
                         studentService.showStudentMenu();
@@ -71,6 +70,7 @@ public class AmsApp {
                                     studentService.showStudentAllRegistrationLecture();
                                 }else{
                                     //올바르지 않은 번호 선택
+                                    System.out.println("올바르지 않은 번호입니다.");
                                 }
                                 break;
                             }
@@ -86,6 +86,8 @@ public class AmsApp {
                                     System.out.print("취소를 원하는 좌석 좌석 번호를 입력하세요(ex: 1-1) : ");
                                     String seatNum = scanner.nextLine();
                                     studentService.cancelReservation(seatNum);
+                                }else{
+                                    System.out.println("올바르지 않은 번호입니다.");
                                 }
 
                                 break;
@@ -98,6 +100,7 @@ public class AmsApp {
                             }
                             default: {
                                 //번호 잘못입력
+                                System.out.println("올바르지 않은 번호입니다.");
                             }
                         }
 
@@ -127,6 +130,7 @@ public class AmsApp {
                             }
                             default: {
                                 //번호 잘못입력
+                                System.out.println("올바르지 않은 번호입니다.");
                             }
                         }
 
@@ -148,7 +152,7 @@ public class AmsApp {
                                 } else if (num.equals("3")) { //학생 삭제
                                     deleteStudentInformation();
                                 } else { //숫자 잘못 입력
-
+                                    System.out.println("올바르지 않은 번호입니다.");
                                 }
                                 break;
                             }
@@ -179,6 +183,7 @@ public class AmsApp {
                                 } else if (num.equals("3")) { //강의 삭제
                                     deleteLectureInformation();
                                 } else { //숫자 잘못 입력
+                                    System.out.println("올바르지 않은 번호입니다.");
                                 }
                                 break;
                             }
@@ -197,8 +202,8 @@ public class AmsApp {
             }
             else if (num.equals("2")) {
                     signIn();
-            } else {
-                    System.out.println("번호 잘못 입력");
+            }else{
+                System.out.println("올바르지 않은 번호입니다.");
             }
 
         }while (true) ;
@@ -219,17 +224,19 @@ public class AmsApp {
             teacherService.setTeacher(userService.loginTeacher(id,password));
         }else if(choiceNum.equals("3")){
             adminService.setAdmin(userService.loginAdmin(id,password));;
-        }else{
-            //올바르지 않은 번호
         }
 
     }
     public void signIn() throws IOException {
         System.out.println("1.학생 2.강사 번호를 입력해주세요");
         String choiceNum = scanner.nextLine();
+        if(!(choiceNum.equals("1")||choiceNum.equals("2"))){
+            System.out.println("올바르지 않은 번호 입니다.");
+            return;
+        }
         System.out.println("id: ");
         String id = scanner.nextLine();
-        while (!ValidationSystem.isValidId(id)) {
+        while (!ValidationSystem.isValidId(id) || userService.isExistStudent(id) || userService.isExistTeacher(id)) {
             //id 오류 출력
             System.out.println("다시 입력");
             id = scanner.nextLine();
@@ -284,6 +291,8 @@ public class AmsApp {
                 System.out.println("다시 입력");
                 accountPassword = scanner.nextLine();
             }
+
+
             userService.signInStudent(id, password, name, gender, phoneNumber, birthday, accountNumber, accountPassword);
         } else if (choiceNum.equals("2")) {
             System.out.println("email: ");
