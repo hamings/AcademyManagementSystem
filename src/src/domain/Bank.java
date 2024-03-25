@@ -40,7 +40,6 @@ public class Bank {
         return false;
     }
 
-
     //학생잔액조회
     public long finalBalance(String accountNumber){
         for (Account account : accountList) {
@@ -50,13 +49,5 @@ public class Bank {
         }
         return 0;
     }
-
-
-
-
-
-
-
-
 }
 

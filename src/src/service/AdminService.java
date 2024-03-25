@@ -92,8 +92,6 @@ public class AdminService {
             System.out.println("입력 id에 해당하는 학생정보가 없습니다.");
             return false;
         }
-        // 학생정보 출력 메서드
-        // 출력 정의 -> student tostring 호출
         student.editStudentInformation();
         return true;
     }
@@ -105,8 +103,6 @@ public class AdminService {
             System.out.println("입력 id에 해당하는 강사정보가 없습니다.");
             return false;
             }
-        // 강사정보 출력 메서드
-        // 출력 정의 -> teacher tostring 호출
         teacher.editTeacherInformation();
         return true;
     }
@@ -157,7 +153,7 @@ public class AdminService {
         }
     }
 
-    //학생정보삭제
+    //학생정보 삭제
     public void deleteStudentInformation() throws IOException {
         Scanner sc = new Scanner(System.in);
         System.out.println("삭제하실 학생의 아이디를 입력해주세요: ");
@@ -179,7 +175,7 @@ public class AdminService {
         }
     }
 
-    //1. 강사상세정보출력
+    //1. 강사상세정보 출력
     public void showDetailTeacherList() throws IOException {
         List<Teacher> TeacherList = teacherRepository.findAll();
 
@@ -188,7 +184,7 @@ public class AdminService {
         }
     }
 
-    //새로운 강사정보 수정
+    //2. 강사정보 수정
     public void newEditTeacherInformation(String teacherId, int option, String value) throws IOException {
         Teacher teacher = teacherRepository.findById(teacherId);//수정할 학생 찾음
 
@@ -225,7 +221,7 @@ public class AdminService {
         }
     }
 
-    //1. 강의상세정보출력
+    //1. 강의상세정보 출력
     public void showDetailLectureList() throws IOException {
         List<Lecture> LectureList = lectureRepository.findAll();
 
@@ -233,6 +229,7 @@ public class AdminService {
             lecture.printDetailLectureInformation();
         }
     }
+
 
     //2.새로운 강의 등록
     public void registerLecture(String name,int day,int time, String teacherName, String teacherId) throws IOException {
