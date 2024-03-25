@@ -298,55 +298,23 @@ public class StudentService {
         return true; // 예약 성공
 
     }
-//        System.out.println();
-//        int x = -1;
-//        int y = -1;
-//        try {
-//            String[] seatInfo = choiceSeat.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
-//            x = Integer.parseInt(seatInfo[0]) - 1;
-//            y = Integer.parseInt(seatInfo[1]) - 1;
-//        } catch (NumberFormatException e) {
-//            System.out.println("잘못된 형식의 좌석 번호입니다.");
-//            return false;
-//        } catch (ArrayIndexOutOfBoundsException e) {
-//            System.out.println("좌석 번호가 유효하지 않습니다.");
-//            return false;
-//        }
-//        // 좌석 번호의 유효성 검사
-//        if (x < 0 || x >= studyRoom.getCheckSeat().length || y < 0 || y >= studyRoom.getCheckSeat()[0].length) {
-//            System.out.println("잘못된 좌석 번호입니다.");
-//            return false;
-//        }
 //
-//        // 좌석이 이미 예약된 경우
-//        if (studyRoom.getCheckSeat()[x][y]) {
-//            System.out.println("이미 예약된 좌석입니다.");
-//            return false;
-//        }
-//
-//        // 만약 이미 이 학생의 당일 예약 기록이 있다면
-//        if (studyRoom.getReservationMap().containsKey(student.getId())) {
-//            System.out.println("이미 예약한 좌석이 있습니다.");
-//            System.out.println("예약한 좌석 : " + studyRoom.getReservationMap().get(student.getId()));
-//            return false;
-//        }
-//
-//        // 예약 가능한 경우 (잘못된 좌석 번호 X, 이미 예약된 좌석 X, 당일 예약 기록 X)
-//        // 해당 좌석 예약
-//        studyRoom.getCheckSeat()[x][y] = true;
-//        // 학생 아이디와 좌석 번호 맵에 저장
-//        studyRoom.getReservationMap().put(student.getId(), String.valueOf(choiceSeat));
-//
-//        System.out.println("좌석이 성공적으로 예약되었습니다.");
-//
-//        return true; // 예약 성공
-
-
     // 자습실 예약 취소
     public boolean cancelReservation(String seatNum) {
-        String[] seatInfo = seatNum.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
-        int x = Integer.parseInt(seatInfo[0]) - 1;
-        int y = Integer.parseInt(seatInfo[1]) - 1;
+        int x = -1;
+        int y = -1;
+        try {
+            String[] seatInfo2 = seatNum.split("-");  // "-" 떼고 행 열 따로 취급  >  좌석 번호 검증을 위해 만든 배열
+            x = Integer.parseInt(seatInfo2[0]) - 1;
+            y = Integer.parseInt(seatInfo2[1]) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("잘못된 형식의 좌석 번호입니다.");
+            return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("좌석 번호가 유효하지 않습니다.");
+            return false;
+        }
+
 
         // 좌석 번호 유효성 검사
         if (x < 0 || x >= studyRoom.getCheckSeat().length || y < 0 || y >= studyRoom.getCheckSeat()[0].length) {
@@ -367,6 +335,8 @@ public class StudentService {
             return false;
         }
     }
+
+    // 3. 알림함
     //학생알림함 제공
     public void checkNotification() throws IOException {
         System.out.println("checkNo");
