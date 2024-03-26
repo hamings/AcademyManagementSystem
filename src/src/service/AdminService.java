@@ -61,7 +61,7 @@ public class AdminService {
         List<String> failList = new ArrayList<>();
         for (Student student : studentList) {
             boolean checkAccount = bank.checkAccount(student.getAccountNumber(), student.getAccountPassword());
-            boolean paymentAccount = bank.paymentAccount(student.getAccountNumber(), 5000L);
+            boolean paymentAccount = bank.paymentAccount(student.getAccountNumber(), student.getLectureCost());
             Long result = bank.finalBalance(student.getAccountNumber());//결제가 완료되고 남은 학생 잔액
 
             String adminContent = "";
