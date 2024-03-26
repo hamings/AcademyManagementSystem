@@ -54,29 +54,8 @@ public class StudentService {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // 0. 학생으로 로그인 후 첫 페이지인 메뉴 보이기
-    public void showStudentMenu() {
-        System.out.println("-----------[학생 관리]-----------");
-        //System.out.println("------------------");
-        System.out.println("1. 수강 관리");
-        System.out.println("2. 자습실 예약");
-        System.out.println("3. 납부 알림 확인");
-        System.out.println("4. 로그아웃");
-        System.out.println("-------------------------------\n");
-        System.out.println("원하시는 서비스 번호를 선택하세요");
-        System.out.print("[입력]: ");
-        //System.out.println("-------------------------------");
-    }
 
-    public void showRegistrationLectureMenu() {
-        System.out.println("\n---------[수강 관리 시스템]---------");
-        System.out.println("1. 수강 신청");
-        System.out.println("2. 수강 취소");
-        System.out.println("3. 수강 신청 내역");
-        System.out.println("----------------------------------\n");
-        System.out.println("원하시는 서비스 번호를 선택하세요");
-        System.out.print("[입력]: ");
 
-    }
 
 
     // 1. 수강 관리
@@ -229,17 +208,6 @@ public class StudentService {
             System.out.println("\n해당 강의를 수강하고 있지 않습니다.\n");
         }
 
-    }
-
-    // 2. 자습실 예약
-    // 해당 서비스 메뉴 보이기
-    public void showStudyRoomMenu() {
-        System.out.println("---------[자습실 관리 시스템]---------");
-        System.out.println("1. 좌석 예약하기");
-        System.out.println("2. 좌석 취소하기");
-        System.out.println("-----------------------------------\n");
-        System.out.println("원하시는 서비스 번호를 선택하세요");
-        System.out.print("[입력]: ");
     }
 
     // 자습실 좌석표 출력
