@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class LectureRepository extends Repository<Lecture, String>{
+public class LectureRepository implements Repository<Lecture, String>{
 
     private Map<Long, LectureRegistration> lectureRegistrationMap; // 1:N 관계 객체 -> 좋은 구조는 아님...
     private Map<String, Teacher> teacherMap;
-    private Map<String, Lecture> lectureMap;
     private Map<String, Student> studentMap;
+    Map<String, Lecture> objectMap;
     @Override
     public boolean isExist(String objectId) {
         if(objectMap.get(objectId) != null) return true;
@@ -111,22 +111,20 @@ public class LectureRepository extends Repository<Lecture, String>{
 
 
         FileSystem.saveObjectMap(ServiceType.STUDENT, studentMap);
-        FileSystem.saveObjectMap(ServiceType.LECTURE, lectureMap);
         FileSystem.saveObjectMap(ServiceType.TEACHER, teacherMap);
         FileSystem.saveObjectMap(ServiceType.LECTUREREGISTRATION, lectureRegistrationMap);
         return 1;
     }
 
     @Override
-    boolean support(ServiceType serviceType) {
+    public boolean support(ServiceType serviceType) {
         return serviceType == ServiceType.LECTURE ? true : false;
     }
 
     @Override
-    void init() throws IOException {
+    public void init() throws IOException {
         objectMap = (Map<String, Lecture>)FileSystem.loadObjectMap(ServiceType.LECTURE);
         lectureRegistrationMap = (Map<Long, LectureRegistration>)FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
-        lectureMap = (Map<String, Lecture>) FileSystem.loadObjectMap(ServiceType.LECTURE);
         teacherMap = (Map<String, Teacher>) FileSystem.loadObjectMap(ServiceType.TEACHER);
         studentMap = (Map<String, Student>) FileSystem.loadObjectMap(ServiceType.STUDENT);
     }

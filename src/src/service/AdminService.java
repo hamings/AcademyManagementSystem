@@ -111,7 +111,7 @@ public class AdminService {
     public boolean showStudentInformation(String studentId) throws IOException {
         Student student = studentRepository.findById(studentId);
         if(student == null) {
-            System.out.println("입력 id에 해당하는 학생정보가 없습니다.");
+            System.out.println("입력 아이디에 해당하는 학생정보가 없습니다.");
             return false;
         }
         student.editStudentInformation();
@@ -122,7 +122,7 @@ public class AdminService {
     public boolean showTeacherInformation(String teacherId) throws IOException {
         Teacher teacher = teacherRepository.findById(teacherId);
         if(teacher == null) {
-            System.out.println("입력 id에 해당하는 강사정보가 없습니다.");
+            System.out.println("입력 아이디에 해당하는 강사정보가 없습니다.");
             return false;
             }
         teacher.editTeacherInformation();
@@ -133,7 +133,10 @@ public class AdminService {
     public void showStudentList() throws IOException {
         List<Student> StudentList = studentRepository.findAll();
 
-        System.out.println("            [학생리스트]           ");
+        if(StudentList.isEmpty()){
+            System.out.println("    [현재 등록중인 학생이 없습니다.]");
+        }
+            System.out.println("            [학생리스트]           ");
         System.out.println("**********************************");
         for (Student student : StudentList) {
             student.printStudentInformation();
@@ -271,6 +274,12 @@ public class AdminService {
         List<Lecture> LectureList = lectureRepository.findAll();
         System.out.println("                [강의리스트]         ");
         System.out.println("*********************************************");
+
+        if(LectureList.isEmpty()){
+            System.out.println("         [현재 등록된 강의는 없습니다.]");
+            return;
+        }
+
         for (Lecture lecture : LectureList) {
             lecture.printLectureInformation();
         }
@@ -302,6 +311,9 @@ public class AdminService {
         int id = lectureRepository.findAll().size() + 1; // 코드 수정 필요
 
         Lecture lecture = new Lecture(name + id, name, day, time, teacherName, teacherId);
+
+//        lecture.setLectureRegistrationList(new ArrayList<>());
+//        lecture.setLectureRegistrationIdList(new ArrayList<>());
 
         Teacher teacher = teacherRepository.findById(teacherId);
         List<Lecture> lectureList = teacher.getLectureList();

@@ -27,6 +27,12 @@ public class AmsApp {
         this.userService = new UserService();
     }
     public void run() throws IOException {
+        System.out.println("                        __                                                                                    __                     __               \n" +
+                "  ____ __________ _____/ /__  ____ ___  __  __   ____ ___  ____ _____  ____ _____ ____  ____ ___  ___  ____  / /_   _______  _______/ /____  ____ ___ \n" +
+                " / __ `/ ___/ __ `/ __  / _ \\/ __ `__ \\/ / / /  / __ `__ \\/ __ `/ __ \\/ __ `/ __ `/ _ \\/ __ `__ \\/ _ \\/ __ \\/ __/  / ___/ / / / ___/ __/ _ \\/ __ `__ \\\n" +
+                "/ /_/ / /__/ /_/ / /_/ /  __/ / / / / / /_/ /  / / / / / / /_/ / / / / /_/ / /_/ /  __/ / / / / /  __/ / / / /_   (__  ) /_/ (__  ) /_/  __/ / / / / /\n" +
+                "\\__,_/\\___/\\__,_/\\__,_/\\___/_/ /_/ /_/\\__, /  /_/ /_/ /_/\\__,_/_/ /_/\\__,_/\\__, /\\___/_/ /_/ /_/\\___/_/ /_/\\__/  /____/\\__, /____/\\__/\\___/_/ /_/ /_/ \n" +
+                "                                     /____/                               /____/                                      /____/                          ");
         do {
             System.out.println();
             //ams 오신것을 환영합니다 print
@@ -111,13 +117,17 @@ public class AmsApp {
                                 }else{
                                     System.out.println("\n올바르지 않은 번호입니다.\n");
                                 }
-
                                 break;
                             }
                             case "3": {
                                 //알림 확인 로직
                                 System.out.println();
                                 studentService.checkNotification();
+                                System.out.println();
+                                break;
+                            } case "4": {
+                                // 로그아웃
+                                studentService.setStudent((Student) userService.logout());
                                 System.out.println();
                                 break;
                             }
@@ -143,13 +153,17 @@ public class AmsApp {
                         System.out.println();
                         switch (num) {
                             case "1": {
-                                System.out.println("------------------------------------[담당강의 리스트]---------------------------------------");
+                                System.out.println("-------------------------------[담당강의 리스트]-----------------------------------");
                                 teacherService.showLectureList();
                                 System.out.println("-----------------------------------------------------------------------------------------");
                                 System.out.println();
                                 break;
                             }
                             case "2": {
+                                if(teacherService.isTeacherLectureListEmpty()){
+                                    System.out.println("[현재 담당하고있는 강의가 없습니다.]");
+                                    continue;
+                                }
                                 //강의번호를 입력해주세요
                                 System.out.print("[강의아이디를 입력해주세요]: ");
                                 String lectureId = scanner.nextLine();
@@ -191,6 +205,7 @@ public class AmsApp {
                                 System.out.println("3. 학생정보삭제");
                                 System.out.println("---------------------------------");
 
+
                                 System.out.print("[입력]: ");
                                 num = scanner.nextLine();
                                 if (num.equals("1")) { //학생 상세
@@ -200,7 +215,8 @@ public class AmsApp {
                                 } else if (num.equals("3")) { //학생 삭제
                                     deleteStudentInformation();
                                 } else{
-                                    System.out.println("올바른 번호를 입력해주세요!");
+                                    System.out.println("[올바른 번호를 입력해주세요!]");
+                                    break;
                                 }
                                 break;
                             }
@@ -306,7 +322,6 @@ public class AmsApp {
             System.out.println("올바르지 않은 번호 입니다.");
             return;
         }
-        System.out.println("id: ");
         System.out.println("-----------[아이디 형식]------------");
         System.out.println("1. 아이디의 시작은 영문으로만 가능합니다.");
         System.out.println("2. '_'를 제외한 특수문자는 불가능합니다.");
@@ -317,7 +332,11 @@ public class AmsApp {
         while (!ValidationSystem.isValidId(id) || userService.isExistStudent(id) || userService.isExistTeacher(id)) {
             //id 오류 출력
             // 예) 시작은 영문으로만, '_'를 제외한 특수문자 안되며 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
-            System.out.println("아이디형식이 잘못 되셨습니다!");
+            if(userService.isExistStudent(id) || userService.isExistTeacher(id)){
+                System.out.println("동일한 아이디가 이미 존재합니다!");
+            }else {
+                System.out.println("아이디형식이 잘못 되셨습니다!");
+            }
             System.out.print("[재입력]: ");
             id = scanner.nextLine();
         }
@@ -438,9 +457,11 @@ public class AmsApp {
         System.out.println("**********************************");
         String studentId;
         while(true) {
-            System.out.println("[상세정보를 확인하실 학생의 아이디]");
+            System.out.println("[상세정보를 확인하실 학생의 아이디 (뒤로가기: 0번)]");
             System.out.print("[입력]: ");
             studentId = scanner.nextLine();
+            if(studentId.equals("0"))
+                return;
             System.out.println("**********************************");
             if(adminService.detailStudentInformation(studentId))
                 break; // 수정할 학생 찾음
@@ -451,9 +472,12 @@ public class AmsApp {
         String studentId;
 
         while(true) {
-            System.out.println("[수정하실 학생의 아이디]");
+            System.out.println("[수정하실 학생의 아이디 (뒤로가기: 0번)]");
             System.out.print("[입력]: ");
             studentId = scanner.nextLine();
+            if(studentId.equals("0")){
+                return;
+            }
             System.out.println("**********************************");
             if(adminService.showStudentInformation(studentId))
                 break; // 수정할 학생 찾음
@@ -554,9 +578,12 @@ public class AmsApp {
         String studentId;
 
         while(true) {
-            System.out.println("[삭제하실 학생의 아이디]");
+            System.out.println("[삭제하실 학생의 아이디 (뒤로가기: 0번)]");
             System.out.print("[입력]: ");
             studentId = scanner.nextLine();
+            if(studentId.equals("0")){
+                return;
+            }
             System.out.println("*****************************************");
             if(adminService.newDeleteStudentInformation(studentId))
                 break; // 수정할 학생 찾음
@@ -568,9 +595,11 @@ public class AmsApp {
         String teacherId;
 
         while(true) {
-            System.out.println("[상세정보를 확인하실 강사의 아이디]");
+            System.out.println("[상세정보를 확인하실 강사의 아이디 (뒤로가기: 0번)]");
             System.out.print("[입력]: ");
             teacherId = scanner.nextLine();
+            if(teacherId.equals("0"))
+                return;
             System.out.println("*****************************************");
             if(adminService.detailTeacherInformation(teacherId))
                 System.out.println();
@@ -583,9 +612,11 @@ public class AmsApp {
         String teacherId;
 
         while(true) {
-            System.out.println("[수정하실 강사의 아이디]: ");
+            System.out.println("[수정하실 강사의 아이디 (뒤로가기: 0번)]: ");
             System.out.print("[입력]: ");
             teacherId = scanner.nextLine();
+            if(teacherId.equals("0"))
+                return;
             System.out.println("*********************************************");
             if(adminService.showTeacherInformation(teacherId))break; // 수정할 학생 찾음
         } // 선생 찾아옴
@@ -680,9 +711,10 @@ public class AmsApp {
         String teacherId;
 
         while(true) {
-            System.out.println("[삭제하실 강사의 아이디]");
+            System.out.println("[삭제하실 강사의 아이디 (뒤로가기: 0번)]");
             System.out.print("[입력]: ");
             teacherId = scanner.nextLine();
+            if(teacherId.equals("0")) return;
             System.out.println("**********************************");
             if(adminService.newDeleteTeacherInformation(teacherId))
                 break;
@@ -694,9 +726,12 @@ public class AmsApp {
         String lectureId;
 
         while(true) {
-            System.out.println("[상세정보를 확인하실 강의 아이디]");
+            System.out.println("[상세정보를 확인하실 강의 아이디 (뒤로가기 0번)]");
             System.out.print("[입력]: ");
             lectureId = scanner.nextLine();
+            if(lectureId.equals("0")){
+                return;
+            }
             System.out.println("**********************************");
             if(adminService.detailLectureInformation(lectureId))
                 break;
@@ -780,9 +815,10 @@ public class AmsApp {
         String lectureId;
 
         while(true) {
-            System.out.println("[삭제하실 강의 아이디]");
+            System.out.println("[삭제하실 강의 아이디 (뒤로가기: 0번)]");
             System.out.print("[입력]: ");
             lectureId = scanner.nextLine();
+            if(lectureId.equals("0")) return;
             if(adminService.newDeleteLectureInformation(lectureId))
                 break;
         }

@@ -53,6 +53,7 @@ public class UserService {
         return null;
     }
     public Object logout(){
+        System.out.println("[로그아웃이 완료되었습니다.]");
         return null;
     }
     public void signInStudent(String id, String password, String name, String gender, String phoneNumber, String birthday, String accountNumber, String accountPassword ) throws IOException {
