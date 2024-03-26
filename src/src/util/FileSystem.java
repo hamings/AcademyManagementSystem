@@ -54,12 +54,23 @@ public class FileSystem {
         try{
             File file = new File(filename);
 
-            if(file.length() == 0) return new HashMap();
+            if(file.length() == 0) {
+                if( !isNotSavedMap.get(serviceType)) {
+                    objectMap = new HashMap();
+                    isNotSavedMap.put(serviceType, true);
+                    mapCache.put(serviceType, objectMap);
+                    return objectMap;
+                } else {
+                    return mapCache.get(serviceType);
+                }
+            }
 
             fis = new FileInputStream(file);
             bis = new BufferedInputStream(fis);
             ois = new ObjectInputStream(bis);
-            if(isNotSavedMap.get(serviceType)) objectMap = mapCache.get(serviceType);
+            if(isNotSavedMap.get(serviceType)) {
+                objectMap = mapCache.get(serviceType);
+            }
             else {
                 //System.out.println(1111);
                 objectMap = (Map) ois.readObject();
@@ -100,6 +111,8 @@ public class FileSystem {
             e.printStackTrace();
         } finally {
             oos.close();
+            bos.close();
+            fos.close();
         }
     }
 }

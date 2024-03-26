@@ -12,7 +12,7 @@ public class Bank {
 
     static{
         accountList = new ArrayList<>();
-        accountList.add(new Account("111-11-1", "1111", 10000L));
+        accountList.add(new Account("111-11-1", "1111", 1000000L));
         accountList.add(new Account("222-22-2", "1111", 3000L));
         accountList.add(new Account("333-33-3", "0000", 10000L));
     }

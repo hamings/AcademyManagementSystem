@@ -122,7 +122,6 @@ public class StudentService {
 //                            + ", 학생ID: " + lectureRegistration.getStudentId() + ", 강의요일: "
 //                            + lectureRegistration.getLectureDay() +
 //                            ", 강의시간: " + intLectureTimeToRealTime(lectureRegistration.getLectureTime()));
-            System.out.print("수강신청 ID: " + lectureRegistration.getId() + "     ");
             System.out.print("강의 ID: " + lectureRegistration.getLectureId() + "     ");
             System.out.print("학생 ID: " + lectureRegistration.getStudentId() + "     ");
             System.out.print("강의 요일: " + lectureRegistration.getLectureDay() + "     ");
@@ -362,17 +361,21 @@ public class StudentService {
     // 3. 알림함
     //학생알림함 제공
     public void checkNotification() throws IOException {
-        System.out.println("checkNo");
+        System.out.println("-----------[결제알림함]-----------");
         if(notificationRepository.isExist(student.getId())){
             Queue<Notification> notificationQueue = (Queue<Notification>) notificationRepository.findById(student.getId());
             for (Notification notification : notificationQueue) {
                 if(notification.getCheckCount() != 0){
-                    System.out.println("[읽음]" + "메세지 내용: " + notification.getAdminContent() + "잔액: " + notification.getBalance());
+                    System.out.println("[읽음] " + "메세지 내용: " + notification.getStudentContent());
+                    System.out.println("[잔액]: " + notification.getBalance());
                 } else {
-                    System.out.println("[안읽음]" + "메세지 내용: " + notification.getAdminContent() + "잔액: " + notification.getBalance());
+                    System.out.println("[안읽음] " + "메세지 내용: " + notification.getStudentContent());
+                    System.out.println("[잔액]: " + notification.getBalance());
                     notification.setCheckCount(1);
                 }
             }
+        } else {
+            System.out.println("     [수신된 알림이 없습니다.]          ");
         }
     }
 

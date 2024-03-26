@@ -1,6 +1,7 @@
 package src.util;
 
 public class Constant {
+    public static final String LOGIN_MENU = "1. 학생 2. 강사 3. 관리자";
     public static final String STUDENT_MENU = "1.수강관리 2.자습실관리 3.알림확인 4.로그아웃";
     public static final String TEACHER_MENU = "1.강의 리스트, 2. 강의별 학생 리스트 3.로그아웃";
     public static final String ADMIN_MENU = "1.학생관리 2.강사관리 3.강의관리 4.납부관리 5.로그아웃";

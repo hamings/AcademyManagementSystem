@@ -15,11 +15,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class TeacherRepository extends Repository<Teacher, String>{
+public class TeacherRepository implements Repository<Teacher, String>{
     private Map<String, Lecture> lectureMap;
     private Map<Long, LectureRegistration> lectureRegistrationMap;
-
-
+    private Map<String, Teacher> objectMap;
     @Override
     public boolean isExist(String objectId) {
         if(objectMap.get(objectId) != null) return true;
@@ -92,12 +91,12 @@ public class TeacherRepository extends Repository<Teacher, String>{
     }
 
     @Override
-    boolean support(ServiceType serviceType) {
+    public boolean support(ServiceType serviceType) {
         return serviceType == ServiceType.TEACHER ? true : false;
     }
 
     @Override
-    void init() throws IOException {
+    public void init() throws IOException {
         objectMap = FileSystem.loadObjectMap(ServiceType.TEACHER);
         lectureMap = FileSystem.loadObjectMap(ServiceType.LECTURE);
     }

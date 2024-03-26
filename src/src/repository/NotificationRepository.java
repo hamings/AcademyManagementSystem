@@ -1,6 +1,7 @@
 package src.repository;
 
 import src.ServiceType;
+import src.domain.LectureRegistration;
 import src.domain.Notification;
 import src.util.FileSystem;
 
@@ -10,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public class NotificationRepository extends Repository<Queue<Notification>, String>{
+public class NotificationRepository implements Repository<Queue<Notification>, String>{
+    Map<String, Queue<Notification>> objectMap;
     @Override
     public boolean isExist(String objectId) {
         if(objectMap.get(objectId) == null) return false;
@@ -46,12 +48,12 @@ public class NotificationRepository extends Repository<Queue<Notification>, Stri
     }
 
     @Override
-    boolean support(ServiceType serviceType) {
+    public boolean support(ServiceType serviceType) {
         return serviceType == ServiceType.NOTIFICATION ? true : false;
     }
 
     @Override
-    void init() throws IOException {
-        super.objectMap = (Map<String, Queue<Notification>>) FileSystem.loadObjectMap(ServiceType.NOTIFICATION);
+    public void init() throws IOException {
+        objectMap = (Map<String, Queue<Notification>>) FileSystem.loadObjectMap(ServiceType.NOTIFICATION);
     }
 }

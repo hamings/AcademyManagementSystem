@@ -34,7 +34,7 @@ public class Student  implements Serializable {
         this.birthday = birthday;
         this.accountNumber = accountNumber;
         this.accountPassword = accountPassword;
-        this.lectureCost = 5000L;
+        this.lectureCost = 0L;
         this.lectureRegistrationIdList = new ArrayList<>();
     }
     //선택된 학생 수정할 수 있는 정보 출력

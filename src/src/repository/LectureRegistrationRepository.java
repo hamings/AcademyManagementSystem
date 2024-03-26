@@ -11,10 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class LectureRegistrationRepository extends Repository<LectureRegistration, Long>{
+public class LectureRegistrationRepository implements Repository<LectureRegistration, Long>{
 
     Map<String, Student> studentMap;
     Map<String, Lecture> lectureMap;
+    Map<Long, LectureRegistration> objectMap;
     @Override
     public boolean isExist(Long objectId) {
         if(objectMap.get(objectId) != null) return true;
@@ -70,12 +71,12 @@ public class LectureRegistrationRepository extends Repository<LectureRegistratio
     }
 
     @Override
-    boolean support(ServiceType serviceType) {
+    public boolean support(ServiceType serviceType) {
         return serviceType == ServiceType.LECTUREREGISTRATION ? true : false;
     }
 
     @Override
-    void init() throws IOException {
+    public void init() throws IOException {
         objectMap = (Map<Long, LectureRegistration>) FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
 
     }

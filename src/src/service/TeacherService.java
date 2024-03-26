@@ -34,7 +34,7 @@ public class TeacherService {
      */
     public void showLectureList(){
         if(teacher.getLectureList().isEmpty()){
-            System.out.println("[현재 담당하고있는 강의가 없습니다.]");
+            System.out.println("                       [현재 담당하고있는 강의가 없습니다.]");
             return;
         }
 
@@ -72,17 +72,14 @@ public class TeacherService {
      * @param lectureId : 강의번호
      */
     public void showStudentListByLecture(String lectureId) throws IOException {
-        Optional<Lecture> findLecture = teacher.getLectureList().stream()
-                                            .filter(lecture -> lecture.getLectureId().equals(lectureId))
-                                            .findFirst();
+        Lecture findLecture = teacher.getLectureList().stream()
+                .filter(lecture -> lecture.getLectureId().equals(lectureId))
+                .findFirst()
+                .get();
 
-        if(findLecture.isEmpty()){
-            System.out.println("강의가 없습니다");
-            return;
-        }
-        List<LectureRegistration> lectureRegistrationList = findLecture.get().getLectureRegistrationList();
+        List<LectureRegistration> lectureRegistrationList = findLecture.getLectureRegistrationList();
         if(lectureRegistrationList.isEmpty()){
-            System.out.println("[해당 강의를 수강하고 있는 학생이 없습니다.]");
+            System.out.println("                [해당 강의를 수강하고 있는 학생이 없습니다.]              ");
             System.out.println();
             return;
         }
@@ -90,5 +87,8 @@ public class TeacherService {
             Student student = studentRepository.findById(lectureRegistration.getStudentId());
             System.out.println("학생명: "+student.getName());
         }
+    }
+    public boolean isTeacherLectureListEmpty(){
+        return teacher.getLectureIdList().isEmpty();
     }
 }

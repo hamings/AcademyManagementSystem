@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class StudentRepository extends Repository<Student, String>{
+public class StudentRepository implements Repository<Student, String>{
     private Map<Long, LectureRegistration> lectureRegistrationMap; // 1:N 관계 객체 -> 좋은 구조는 아님...
     private Map<String, Lecture> lectureMap;
-
+    private Map<String, Student> objectMap;
     @Override
     public boolean isExist(String objectId) {
         if(objectMap.get(objectId) != null) return true;
@@ -95,12 +95,12 @@ public class StudentRepository extends Repository<Student, String>{
     }
 
     @Override
-    boolean support(ServiceType serviceType) {
+    public boolean support(ServiceType serviceType) {
         return serviceType == ServiceType.STUDENT ? true : false;
     }
 
     @Override
-    void init() throws IOException {
+    public void init() throws IOException {
         objectMap = (Map<String, Student>)FileSystem.loadObjectMap(ServiceType.STUDENT);
         lectureRegistrationMap = (Map<Long, LectureRegistration>)FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
     }
