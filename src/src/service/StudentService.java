@@ -55,12 +55,27 @@ public class StudentService {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // 0. 학생으로 로그인 후 첫 페이지인 메뉴 보이기
     public void showStudentMenu() {
-        System.out.println("------------------");
-        System.out.println("-----학생 관리-----");
-        System.out.println("------------------");
+        System.out.println("-----------[학생 관리]-----------");
+        //System.out.println("------------------");
         System.out.println("1. 수강 관리");
         System.out.println("2. 자습실 예약");
         System.out.println("3. 납부 알림 확인");
+        System.out.println("4. 로그아웃");
+        System.out.println("-------------------------------\n");
+        System.out.println("원하시는 서비스 번호를 선택하세요");
+        System.out.print("[입력]: ");
+        //System.out.println("-------------------------------");
+    }
+
+    public void showRegistrationLectureMenu() {
+        System.out.println("\n---------[수강 관리 시스템]---------");
+        System.out.println("1. 수강 신청");
+        System.out.println("2. 수강 취소");
+        System.out.println("3. 수강 신청 내역");
+        System.out.println("----------------------------------\n");
+        System.out.println("원하시는 서비스 번호를 선택하세요");
+        System.out.print("[입력]: ");
+
     }
 
 
@@ -70,19 +85,19 @@ public class StudentService {
     public void showAllLectureList() throws IOException {
         // lectureRepository 에서 findAll() 메서드 호출
         List<Lecture> allLectures = lectureRepository.findAll();
-        System.out.println("[수강 가능한 강의 목록]");
-        System.out.println("-----------------------------------------------------------------------------------------------------");
+        System.out.println();
+        System.out.println("------------------------------------------[수강 가능한 강의 목록]------------------------------------------");
+        //System.out.println("-----------------------------------------------------------------------------------------------------");
         // 가져온 강의 목록 처리
         for (Lecture lecture : allLectures) {
-            System.out.print("강의 ID: " + lecture.getLectureId() + "   ");
-            System.out.print("강의 이름: " + lecture.getLectureName() + "   ");
-            System.out.print("강의 요일: " + intLectureDayToRealDay(lecture.getLectureTime()) + "   "); // 숫자 -> 요일
-            System.out.print("강의 시간: " + intLectureTimeToRealTime(lecture.getLectureTime()) + "   ");  // 숫자 -> realtime
-            System.out.println("강사: " + lecture.getLectureTeacherName() + "   ");
+            System.out.print("강의 ID: " + lecture.getLectureId() + "     ");
+            System.out.print("강의 이름: " + lecture.getLectureName() + "     ");
+            System.out.print("강의 요일: " + intLectureDayToRealDay(lecture.getLectureTime()) + "     "); // 숫자 -> 요일
+            System.out.print("강의 시간: " + intLectureTimeToRealTime(lecture.getLectureTime()) + "     ");  // 숫자 -> realtime
+            System.out.println("강사: " + lecture.getLectureTeacherName() + "     ");
             //System.out.println(); // 강의 사이에 공백 라인 추가
         }
-        System.out.println("-----------------------------------------------------------------------------------------------------");
-        System.out.println();
+        System.out.println("--------------------------------------------------------------------------------------------------------\n");
     }
 
 
@@ -95,18 +110,25 @@ public class StudentService {
                 .collect(Collectors.toList());
 
         if(studentLectureRegistration.isEmpty()) {
-            System.out.println("수강 신청 내역이 존재하지 않습니다.");
+            System.out.println("수강 신청 내역이 존재하지 않습니다.\n");
             return false;
         }
         // 해당 학생 수강 신청 내역 출력
-        System.out.println("[수강 신청 내역]");
+        //System.out.println("\n[수강 신청 내역]");
+        System.out.println("\n---------------------------------------------[수강 신청 내역]-------------------------------------------");
         for(LectureRegistration lectureRegistration : studentLectureRegistration) {
-            System.out.println(
-                    "수강신청ID: " + lectureRegistration.getId() + ", 강의ID: " + lectureRegistration.getLectureId()
-                            + ", 학생ID: " + lectureRegistration.getStudentId() + ", 강의요일: "
-                            + lectureRegistration.getLectureDay() +
-                            ", 강의시간: " + intLectureTimeToRealTime(lectureRegistration.getLectureTime()));
+//            System.out.println(
+//                    "수강신청ID: " + lectureRegistration.getId() + ", 강의ID: " + lectureRegistration.getLectureId()
+//                            + ", 학생ID: " + lectureRegistration.getStudentId() + ", 강의요일: "
+//                            + lectureRegistration.getLectureDay() +
+//                            ", 강의시간: " + intLectureTimeToRealTime(lectureRegistration.getLectureTime()));
+            System.out.print("수강신청 ID: " + lectureRegistration.getId() + "     ");
+            System.out.print("강의 ID: " + lectureRegistration.getLectureId() + "     ");
+            System.out.print("학생 ID: " + lectureRegistration.getStudentId() + "     ");
+            System.out.print("강의 요일: " + lectureRegistration.getLectureDay() + "     ");
+            System.out.println("강의 시간: " + intLectureTimeToRealTime(lectureRegistration.getLectureTime()) + "     ");
         }
+        System.out.println("------------------------------------------------------------------------------------------------------\n");
         return true;
     }
 
@@ -151,7 +173,7 @@ public class StudentService {
         // 강의 리스트에서 해당 강의 정보 가져오기
         Lecture pickLecture = lectureRepository.findById(choiceLectureId);
         if (pickLecture == null) {
-            System.out.println("존재하지 않는 강의입니다.");
+            System.out.println("\n존재하지 않는 강의입니다\n");
             return;
         }
         // 이미 해당 시간에 수강 중인 강의인지 확인
@@ -161,6 +183,7 @@ public class StudentService {
         // 이미 수강 중인 강의가 없으면 수강 신청 처리
         if (!isAlreadyRegistered) {
             LectureRegistration lectureRegistration = new LectureRegistration();
+            //lectureRegistration.setId((long) count++);
             lectureRegistration.setLectureId(pickLecture.getLectureId());
             lectureRegistration.setStudentId(student.getId());
             lectureRegistration.setLectureDay(intLectureDayToRealDay(pickLecture.getLectureDay()));
@@ -171,6 +194,7 @@ public class StudentService {
 
             student.getLectureRegistrationList().add(lectureRegistration);
             student.getLectureRegistrationIdList().add(lectureRegistration.getId());
+            student.setLectureCost(student.getLectureCost() + 100000L);
 
             pickLecture.getLectureRegistrationList().add(lectureRegistration);
             pickLecture.getLectureRegistrationIdList().add(lectureRegistration.getId());
@@ -178,10 +202,10 @@ public class StudentService {
             studentRepository.save();
             lectureRepository.save();
             //studentRegistrations.put(student.getId(), lecture.getLectureRegistrationList());
-            System.out.println("수강 신청이 완료되었습니다.");
-            student.setLectureCost(student.getLectureCost() + 100000L);
+            System.out.println("수강 신청이 완료되었습니다.\n");
+
         } else
-            System.out.println("이미 해당 시간에 다른 강의를 수강 중입니다.");
+            System.out.println("이미 해당 시간에 다른 강의를 수강 중입니다.\n");
     }
 
     // 수강 취소
@@ -200,10 +224,10 @@ public class StudentService {
         }
 
         if (isCancelled) {
-            System.out.println("수강이 취소되었습니다.");
+            System.out.println("\n수강이 취소되었습니다.\n");
             student.setLectureCost(student.getLectureCost()-100000L); //수강취소후 강의료 환불
         } else {
-            System.out.println("해당 강의를 수강하고 있지 않습니다.");
+            System.out.println("\n해당 강의를 수강하고 있지 않습니다.\n");
         }
 
     }
@@ -211,16 +235,19 @@ public class StudentService {
     // 2. 자습실 예약
     // 해당 서비스 메뉴 보이기
     public void showStudyRoomMenu() {
-        System.out.println("------------------");
-        System.out.println("-----자습실 예약-----");
-        System.out.println("------------------");
-        System.out.println("1. 예약하기");
-        System.out.println("2. 예약취소하기");
+        System.out.println("---------[자습실 관리 시스템]---------");
+        System.out.println("1. 좌석 예약하기");
+        System.out.println("2. 좌석 취소하기");
+        System.out.println("-----------------------------------\n");
+        System.out.println("원하시는 서비스 번호를 선택하세요");
+        System.out.print("[입력]: ");
     }
 
     // 자습실 좌석표 출력
     public void showStudyRoom() {
         //boolean[][] checkSeat = studyRoom.getCheckSeat();
+        System.out.println("\n************[좌석표]***********");
+        //System.out.println("******************************");
         String reservationInformation = studyRoom.getReservationMap().get(student.getId());
         for (int i = 0; i < studyRoom.getCheckSeat().length; i++) {
             for (int j = 0; j < studyRoom.getCheckSeat()[i].length; j++) {
@@ -235,12 +262,12 @@ public class StudentService {
             }
             System.out.println(); // 다음 줄로 넘어감
         }
-        System.out.println("*****************************************");
+        System.out.println("******************************\n");
     }
 
     public boolean isExistResevation(){
         if (studyRoom.getReservationMap().containsKey(student.getId())) {
-            System.out.println("당일 이미 예약된 좌석이 있습니다.");
+            System.out.println("당일 이미 예약된 좌석이 있습니다.\n");
             return true;
         }
         return false;
@@ -258,27 +285,27 @@ public class StudentService {
             x = Integer.parseInt(seatInfo[0]) - 1;
             y = Integer.parseInt(seatInfo[1]) - 1;
         } catch (NumberFormatException e) {
-            System.out.println("잘못된 형식의 좌석 번호입니다.");
+            System.out.println("잘못된 형식의 좌석 번호입니다.\n");
             return false;
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("좌석 번호가 유효하지 않습니다.");
+            System.out.println("좌석 번호가 유효하지 않습니다.\n");
             return false;
         }
         // 좌석 번호의 유효성 검사
         if (x < 0 || x >= studyRoom.getCheckSeat().length || y < 0 || y >= studyRoom.getCheckSeat()[0].length) {
-            System.out.println("잘못된 좌석 번호입니다.");
+            System.out.println("잘못된 좌석 번호입니다.\n");
             return false;
         }
 
         // 좌석이 이미 예약된 경우
         if (studyRoom.getCheckSeat()[x][y]) {
-            System.out.println("이미 예약된 좌석입니다.");
+            System.out.println("이미 예약된 좌석입니다.\n");
             return false;
         }
 
         // 만약 이미 이 학생의 당일 예약 기록이 있다면
         if (studyRoom.getReservationMap().containsKey(student.getId())) {
-            System.out.println("이미 예약한 좌석이 있습니다.");
+            System.out.println("이미 예약한 좌석이 있습니다.\n");
             System.out.println("예약한 좌석 : " + studyRoom.getReservationMap().get(student.getId()));
             return false;
         }
@@ -289,7 +316,7 @@ public class StudentService {
         // 학생 아이디와 좌석 번호 맵에 저장
         studyRoom.getReservationMap().put(student.getId(), String.valueOf(choiceSeat));
 
-        System.out.println("좌석이 성공적으로 예약되었습니다.");
+        System.out.println("좌석이 성공적으로 예약되었습니다.\n");
 
         return true; // 예약 성공
 
@@ -304,17 +331,17 @@ public class StudentService {
             x = Integer.parseInt(seatInfo2[0]) - 1;
             y = Integer.parseInt(seatInfo2[1]) - 1;
         } catch (NumberFormatException e) {
-            System.out.println("잘못된 형식의 좌석 번호입니다.");
+            System.out.println("\n잘못된 형식의 좌석 번호입니다.\n");
             return false;
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("좌석 번호가 유효하지 않습니다.");
+            System.out.println("\n좌석 번호가 유효하지 않습니다.\n");
             return false;
         }
 
 
         // 좌석 번호 유효성 검사
         if (x < 0 || x >= studyRoom.getCheckSeat().length || y < 0 || y >= studyRoom.getCheckSeat()[0].length) {
-            System.out.println("잘못된 좌석 번호입니다.");
+            System.out.println("\n잘못된 좌석 번호입니다.\n");
             return false;
         }
 
@@ -324,10 +351,10 @@ public class StudentService {
             // 예약 취소
             studyRoom.getReservationMap().remove(student.getId());
             studyRoom.getCheckSeat()[x][y] = false; // 좌석 예약 취소
-            System.out.println("좌석 예약이 취소되었습니다.");
+            System.out.println("\n좌석 예약이 취소되었습니다.\n");
             return true;
         } else {
-            System.out.println("해당 좌석은 예약되어 있지 않거나 다른 학생이 예약한 좌석입니다.");
+            System.out.println("\n해당 좌석은 예약되어 있지 않거나 다른 학생이 예약한 좌석입니다.\n");
             return false;
         }
     }

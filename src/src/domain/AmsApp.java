@@ -52,18 +52,20 @@ public class AmsApp {
                         num = scanner.nextLine();
                         switch (num) {
                             case "1": {
-                                System.out.println("1.수강신청 2.수강취소 3.수강신청내역");
+                                studentService.showRegistrationLectureMenu();
                                 num = scanner.nextLine();
                                 if(num.equals("1")) { //수강신청 선택
                                     studentService.showAllLectureList();
                                     // 원하는 강의 고르기
-                                    System.out.print("수강하고자 하는 강의의 강의 id를 입력해주세요: ");
+                                    System.out.print("수강하고자 하는 강의의 강의 id를 입력해주세요: \n");
+                                    System.out.print("[입력]: ");
                                     String choiceLectureId = scanner.nextLine();
                                     studentService.registerLecture(choiceLectureId);
                                     break;
                                 }else if (num.equals("2")){ //수강신청 취소
                                     if(studentService.showStudentAllRegistrationLecture()){
-                                        System.out.println("취소하고자 하는 강의의 강의 id를 입력해주세요: ");
+                                        System.out.println("취소하고자 하는 강의의 강의 id를 입력해주세요: \n");
+                                        System.out.print("[입력]: ");
                                         String lectureId = scanner.nextLine();
                                         studentService.deleteLecture(lectureId);
                                     }
@@ -72,7 +74,7 @@ public class AmsApp {
                                     studentService.showStudentAllRegistrationLecture();
                                 }else{
                                     //올바르지 않은 번호 선택
-                                    System.out.println("올바르지 않은 번호입니다.");
+                                    System.out.println("\n올바르지 않은 번호입니다.");
                                 }
                                 break;
                             }
@@ -82,29 +84,33 @@ public class AmsApp {
                                 num = scanner.nextLine();
                                 if(num.equals("1")){
                                     if(!studentService.isExistResevation()) {
-                                        System.out.print("예약을 원하는 좌석 번호를 입력하세요(ex: 1-1) : ");
+                                        System.out.println("\n예약을 원하는 좌석 번호를 입력하세요(ex: 1-1)");
+                                        System.out.print("[입력]: ");
                                         String choiceSeat = scanner.nextLine();
                                         studentService.isPossibleReserve(choiceSeat);
                                     }
                                 }else if(num.equals("2")){
-                                    System.out.print("취소를 원하는 좌석 좌석 번호를 입력하세요(ex: 1-1) : ");
+                                    System.out.print("\n취소를 원하는 좌석 좌석 번호를 입력하세요(ex: 1-1)");
+                                    System.out.print("[입력]: ");
                                     String seatNum = scanner.nextLine();
                                     studentService.cancelReservation(seatNum);
                                 }else{
-                                    System.out.println("올바르지 않은 번호입니다.");
+                                    System.out.println("\n올바르지 않은 번호입니다.\n");
                                 }
 
                                 break;
                             }
                             case "3": {
                                 //알림 확인 로직
+                                System.out.println();
                                 studentService.checkNotification();
+                                System.out.println();
                                 break;
 
                             }
                             default: {
                                 //번호 잘못입력
-                                System.out.println("올바르지 않은 번호입니다.");
+                                System.out.println("\n올바르지 않은 번호입니다.\n");
                             }
                         }
 
