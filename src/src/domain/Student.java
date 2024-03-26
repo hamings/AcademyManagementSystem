@@ -39,21 +39,29 @@ public class Student  implements Serializable {
     }
     //선택된 학생 수정할 수 있는 정보 출력
     public void editStudentInformation(){
-        System.out.println("<학생수정정보>");
+        System.out.println("------------[학생정보수정]-----------");
         System.out.println("1. 학생비밀번호: " + password);
         System.out.println("2. 학생이름: " + name);
         System.out.println("3. 학생휴대폰번호: " + phoneNumber);
         System.out.println("4. 학생계좌비밀번호: " + accountPassword);
+        System.out.println("------------------------------------");
     }
 
     //학생이름, 학생아이디 출력
     public void printStudentInformation(){
         System.out.println("이름: " + name + ", 아이디: " + id );
-        System.out.println("***********************");
+        System.out.println("**********************************");
     }
 
     public void printDetailStudentInformation(){
-        System.out.println("이름: " + name + ", 아이디: " + id + ", 성별: " + gender + ", 생년월일: " + birthday + ", 휴대폰번호: " + phoneNumber + " 계좌번호: " + accountNumber);
+        System.out.println("---------["+name+" 학생님]"+"---------");
+        System.out.println("1. 아이디: " + id);
+        System.out.println("2. 성별: " + gender);
+        System.out.println("3. 생년월일: " + birthday);
+        System.out.println("4. 휴대폰번호: " + phoneNumber);
+        System.out.println("5. 계좌번호: " + accountNumber);
+        System.out.println("--------------------------------");
+        System.out.println();
     }
 
 }

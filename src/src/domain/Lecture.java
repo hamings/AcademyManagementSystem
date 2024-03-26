@@ -32,7 +32,9 @@ public class Lecture  implements Serializable {
     }
 
     public void printLectureInformation(){
+
         System.out.println("이름: " + lectureName + ", 아이디: " + lectureId);
+        System.out.println("*********************************************");
     }
 
     public void printDetailLectureInformation(){
