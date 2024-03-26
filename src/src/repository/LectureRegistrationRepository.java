@@ -35,8 +35,12 @@ public class LectureRegistrationRepository extends Repository<LectureRegistratio
 
     @Override
     public void insert(LectureRegistration lectureRegistration) {
-        lectureRegistration.setId((long)(objectMap.size() + 1 ));
-        objectMap.put(lectureRegistration.getId(), lectureRegistration);
+        long key = objectMap.size() + 1;
+        while(objectMap.containsKey(key)) {
+            key++;
+        }
+        lectureRegistration.setId(key);
+        objectMap.put(key, lectureRegistration);
     }
 
     @Override
@@ -51,9 +55,6 @@ public class LectureRegistrationRepository extends Repository<LectureRegistratio
 
         Student student = studentMap.get(object.getStudentId());
         Lecture lecture = lectureMap.get(object.getLectureId());
-
-
-
         int idx = student.getLectureRegistrationIdList().indexOf(object.getId());
         student.getLectureRegistrationIdList().remove(idx);
 
