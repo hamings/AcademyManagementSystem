@@ -548,15 +548,26 @@ public class AmsApp {
         String teacherId = "";
         String teacherName = "";
         boolean isTeacherExist = false;
+        boolean isExistLecture = adminService.isExistTeacher(teacherId);
+
+//        // 해당 시간에 이미 강의가 있는지 확인
+//        if (isExist) {
+//            System.out.println("강사가 이미 같은 요일과 같은 시간에 강의를 가지고 있습니다.");
+//        }
 
         while (!isTeacherExist) {
             System.out.print("[담당 강사 아이디]: ");
             teacherId = scanner.nextLine();
             isTeacherExist = adminService.isExistTeacher(teacherId);
-            //lectureRepository있으면,
+            // lectureRepository있으면,
             // teacherFound = lectureRepository.isExist(teacherId);
 
             if (isTeacherExist) {
+                // 해당 시간과 요일에 이미 강의가 있는지 확인
+                if (adminService.isExistSameTimeLecture(teacherId, day, time)) {
+                    System.out.println("강사가 이미 같은 요일과 같은 시간에 강의를 가지고 있습니다.");
+                    return;
+                }
                 teacherName = adminService.getTeacherName(teacherId);
                 adminService.registerLecture(name, day, time, teacherName, teacherId);
                 System.out.println("강의가 성공적으로 등록되었습니다!");

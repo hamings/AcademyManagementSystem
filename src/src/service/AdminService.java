@@ -297,6 +297,23 @@ public class AdminService {
         return teacherRepository.isExist(teacherId);
     }
 
+    // 동일한 요일, 시간의 강의가 존재하는지
+    public boolean isExistSameTimeLecture(String teacherId, int day, int time) throws IOException {
+        Teacher teacher = teacherRepository.findById(teacherId);
+
+        List<Lecture> lectureList = teacher.getLectureList();
+        if(lectureList.isEmpty()){
+            return false;
+        }
+        for (Lecture lecture : lectureList) {
+            if (lecture.getLectureDay() == day && lecture.getLectureTime() == time) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     //강사 아이디로 강사 이름반환
     public String getTeacherName(String teacherId) throws IOException {
 
