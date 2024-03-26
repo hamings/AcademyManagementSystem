@@ -24,26 +24,32 @@ public class UserService {
 
         Student student = studentRepository.findById(id);
         if(student!=null && student.getPassword().equals(pw)){
+            System.out.println("["+student.getName()+"]"+"학생님 로그인되셨습니다!");
+            System.out.println();
             return student;
         }
-        System.out.println("로그인 실패");
+        System.out.println("[로그인정보가 일치하지 않아 메인메뉴로 돌아갑니다.]");
         return null;
 
     }
     public Teacher loginTeacher(String id, String pw) throws IOException {
         Teacher teacher = teacherRepository.findById(id);
         if(teacher!=null && teacher.getPassword().equals(pw)){
+            System.out.println("["+teacher.getName()+"]"+"강사님 로그인되셨습니다!");
+            System.out.println();
             return teacher;
         }
-        System.out.println("로그인 실패");
+        System.out.println("[로그인정보가 일치하지 않아 메인메뉴로 돌아갑니다.]");
         return null;
 
     }
     public Admin loginAdmin(String id, String pw){
         if(admin.getId().equals(id)&&admin.getPassword().equals(pw)){
+            System.out.println("[관리자]님 로그인되셨습니다!");
+            System.out.println();
             return admin;
         }
-        System.out.println("로그인 실패");
+        System.out.println("[로그인정보가 일치하지 않아 메인메뉴로 돌아갑니다.]");
         return null;
     }
     public Object logout(){

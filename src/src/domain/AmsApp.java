@@ -28,16 +28,30 @@ public class AmsApp {
     }
     public void run() throws IOException {
         do {
+            System.out.println();
             //ams 오신것을 환영합니다 print
-            System.out.println("ams");
+            System.out.println("********************");
+            System.out.println("****** 효성AMS ******");
+            System.out.println("********************");
 
             //1: 로그인, 2: 회원가입
-            System.out.println("1: 로그인, 2: 회원가입");
+            System.out.println("------[시작하기]------");
+            System.out.println("1. 로그인");
+            System.out.println("2. 회원가입");
+            System.out.println("--------------------");
 
+            System.out.print("[입력]: ");
             String num = scanner.nextLine();
+            System.out.println();
             if (num.equals("1")) {
                 //1번이라면 1.학생, 2.강사, 3.관리자 중 선택하세요 출력
-                System.out.println("1.학생, 2.강사, 3.관리자  \n 번호를 선택하세요");
+
+                System.out.println("-----[로그인 메뉴]-----");
+                System.out.println("1. 학생 ");
+                System.out.println("2. 강사 ");
+                System.out.println("3. 관리자 ");
+                System.out.println("----------------------");
+                System.out.print("[입력]: ");
                 //번호 선택해주세요
                 num = scanner.nextLine();
                 if(num.equals("1")||num.equals("2")||num.equals("3")) {
@@ -106,11 +120,11 @@ public class AmsApp {
                                 studentService.checkNotification();
                                 System.out.println();
                                 break;
-
                             }
                             default: {
+                                System.out.println("올바른 번호를 입력해주세요!");
+                                break;
                                 //번호 잘못입력
-                                System.out.println("\n올바르지 않은 번호입니다.\n");
                             }
                         }
 
@@ -119,18 +133,28 @@ public class AmsApp {
                     loop:
                     while (teacherService.getTeacher() != null) {
                         //강사 메뉴 1.강의 리스트, 2. 강의별 학생 리스트 3.로그아웃
-                        System.out.println("1.강의 리스트, 2. 강의별 학생 리스트 3.로그아웃");
+                        System.out.println("----------[강사 서비스]-------------");
+                        System.out.println("1. 강의 리스트");
+                        System.out.println("2. 강의별 학생 리스트");
+                        System.out.println("3. 로그아웃");
+                        System.out.println("----------------------------------");
+                        System.out.print("[입력]: ");
                         num = scanner.nextLine();
+                        System.out.println();
                         switch (num) {
                             case "1": {
+                                System.out.println("------------------------------------[담당강의 리스트]---------------------------------------");
                                 teacherService.showLectureList();
+                                System.out.println("-----------------------------------------------------------------------------------------");
+                                System.out.println();
                                 break;
                             }
                             case "2": {
                                 //강의번호를 입력해주세요
-                                System.out.println("강의번호를 입력해주세요.");
-                                String lectureNumber = scanner.nextLine();
-                                teacherService.showStudentListByLecture(lectureNumber);
+                                System.out.print("[강의아이디를 입력해주세요]: ");
+                                String lectureId = scanner.nextLine();
+                                System.out.println();
+                                teacherService.showStudentListByLecture(lectureId);
                                 break;
                             }
                             case "3": {
@@ -140,20 +164,34 @@ public class AmsApp {
                             }
                             default: {
                                 //번호 잘못입력
-                                System.out.println("올바르지 않은 번호입니다.");
+                                System.out.println("올바르지 않은 번호입니다!");
                             }
                         }
 
                     }
                 } else if (num.equals("3")) { //관리자 서비스
                     while (adminService.getAdmin() != null) {
-                        System.out.println("1.학생관리 2.강사관리 3.강의관리 4.납부관리 5.로그아웃");
-                        System.out.println("번호 입력해주세요.");
+                        System.out.println("----------[관리자 서비스]------------");
+                        System.out.println("1. 학생관리");
+                        System.out.println("2. 강사관리");
+                        System.out.println("3. 강의관리");
+                        System.out.println("4. 납부관리");
+                        System.out.println("5. 로그아웃");
+                        System.out.println("----------------------------------");
+                        System.out.print("[입력]: ");
                         num = scanner.nextLine();
+
                         switch (num) {
                             case "1": {
                                 adminService.showStudentList();
-                                System.out.println("1.학생상세 2.학생수정 3.학생삭제");
+                                System.out.println();
+                                System.out.println("----------[학생정보관리]------------");
+                                System.out.println("1. 학생상세정보");
+                                System.out.println("2. 학생정보수정");
+                                System.out.println("3. 학생정보삭제");
+                                System.out.println("---------------------------------");
+
+                                System.out.print("[입력]: ");
                                 num = scanner.nextLine();
                                 if (num.equals("1")) { //학생 상세
                                     showDetailStudent();
@@ -161,29 +199,42 @@ public class AmsApp {
                                     editStudentInformation();
                                 } else if (num.equals("3")) { //학생 삭제
                                     deleteStudentInformation();
-                                } else { //숫자 잘못 입력
-                                    System.out.println("올바르지 않은 번호입니다.");
+                                } else{
+                                    System.out.println("올바른 번호를 입력해주세요!");
                                 }
                                 break;
                             }
                             case "2": {
                                 adminService.showTeacherList();
-                                System.out.println("1.강사상세 2.강사수정 3. 강사삭제");
+                                System.out.println();
+                                System.out.println("----------[강사정보관리]------------");
+                                System.out.println("1. 강사상세정보");
+                                System.out.println("2. 강사정보수정");
+                                System.out.println("---------------------------------");
+                                System.out.print("[입력]: ");
                                 num = scanner.nextLine();
 
                                 if (num.equals("1")) { //강사 상세
                                     showDetailTeacher();
                                 } else if (num.equals("2")) { //강사 수정
-                                    editTeacherInformation();
-                                } else if (num.equals("3")) { //강사 삭제
-                                    deleteTeacherInformation();
-                                } else { //숫자 잘못 입력
+                                    editTeacherInformation();}
+//                                } else if (num.equals("3")) { //강사 삭제
+//                                    deleteTeacherInformation();
+//                                }
+                                else {
+                                    System.out.println("잘못된 번호를 입력하여 메인메뉴로 돌아갑니다.");
                                 }
                                 break;
                             }
                             case "3": {
                                 adminService.showLectureList();
-                                System.out.println("1.강의상세 2.강의등록 3.강의삭제");
+                                System.out.println();
+                                System.out.println("----------[강의정보관리]------------");
+                                System.out.println("1. 강의상세정보");
+                                System.out.println("2. 신규강의등록");
+                                System.out.println("3. 강의정보삭제");
+                                System.out.println("---------------------------------");
+                                System.out.print("[입력]: ");
                                 num = scanner.nextLine();
 
                                 if (num.equals("1")) { //강의 상세
@@ -203,8 +254,10 @@ public class AmsApp {
                             }
                             case "5": {
                                 //로그아웃
+                                System.out.println("[로그아웃] 되셨습니다!");
                                 adminService.setAdmin((Admin) userService.logout());
-                            }
+                            } default:
+                                break;
                         }
 
                     }
@@ -212,8 +265,8 @@ public class AmsApp {
             }
             else if (num.equals("2")) {
                     signIn();
-            }else{
-                System.out.println("올바르지 않은 번호입니다.");
+            } else {
+                    System.out.println("올바른 번호를 다시 입력해주세요!");
             }
 
         }while (true) ;
@@ -221,108 +274,174 @@ public class AmsApp {
     }
     public void login(String choiceNum) throws IOException {
 
+        System.out.println("***********************");
         //id input
-        System.out.println("id 입력: ");
+        System.out.print("[아이디 입력]: ");
         String id = scanner.nextLine();
         //pw input
-        System.out.println("pw 입력: ");
-
+        System.out.print("[비밀번호 입력]: ");
         String password = scanner.nextLine();
+        System.out.println("***********************");
+
         if(choiceNum.equals("1")){
             studentService.setStudent(userService.loginStudent(id,password));
         }else if (choiceNum.equals("2")){
             teacherService.setTeacher(userService.loginTeacher(id,password));
         }else if(choiceNum.equals("3")){
             adminService.setAdmin(userService.loginAdmin(id,password));;
+        }else{
+            System.out.println("올바른 번호를 입력해주세요!");
         }
 
     }
     public void signIn() throws IOException {
-        System.out.println("1.학생 2.강사 번호를 입력해주세요");
+        System.out.println("-------------[회원가입]-------------");
+        System.out.println("[효성AMS에 오신것을 진심으로 환영합니다!]");
+        System.out.println("1. 학생으로 회원가입");
+        System.out.println("2. 강사로 회원가입");
+        System.out.println("----------------------------------");
+        System.out.print("[입력]: ");
         String choiceNum = scanner.nextLine();
         if(!(choiceNum.equals("1")||choiceNum.equals("2"))){
             System.out.println("올바르지 않은 번호 입니다.");
             return;
         }
         System.out.println("id: ");
+        System.out.println("-----------[아이디 형식]------------");
+        System.out.println("1. 아이디의 시작은 영문으로만 가능합니다.");
+        System.out.println("2. '_'를 제외한 특수문자는 불가능합니다.");
+        System.out.println("3. 아이디의 자리수는 5~12자 이내로 가능합니다.");
+        System.out.println("----------------------------------");
+        System.out.print("[아이디]: ");
         String id = scanner.nextLine();
         while (!ValidationSystem.isValidId(id) || userService.isExistStudent(id) || userService.isExistTeacher(id)) {
             //id 오류 출력
-            System.out.println("다시 입력");
+            // 예) 시작은 영문으로만, '_'를 제외한 특수문자 안되며 영문, 숫자, '_'으로만 이루어진 5 ~ 12자 이하
+            System.out.println("아이디형식이 잘못 되셨습니다!");
+            System.out.print("[재입력]: ");
             id = scanner.nextLine();
         }
-        System.out.println("pw: ");
+        System.out.println("----------[비밀번호 형식]------------");
+        System.out.println("1. 최소 1개이상의 영어 대문자");
+        System.out.println("2. 최소 1개이상의 영어 소문자");
+        System.out.println("3. 최소 1개이상의 숫자");
+        System.out.println("4. 최소 1개이상의 특수문자");
+        System.out.println("5. 최소 8자리 이상의 비밀번호");
+        System.out.println("----------------------------------");
+        System.out.print("[비밀번호]: ");
         String password = scanner.nextLine();
         while (!ValidationSystem.isValidPassword(password)) {
             //pw 오류
-            System.out.println("다시 입력");
+            System.out.println("비밀번호형식이 올바르지 않습니다!");
+            System.out.print("[재입력]: ");
             password = scanner.nextLine();
         }
-        System.out.println("name: ");
+        System.out.print("[이름]: ");
         String name = scanner.nextLine();
         while (!ValidationSystem.isValidName(name)) {
             //name 오류 출력
-            System.out.println("다시 입력");
+            System.out.print("[재입력]: ");
             name = scanner.nextLine();
         }
-        System.out.println("gender: ");
+        System.out.println("------------[성별 형식]-------------");
+        System.out.println("1. 남자: M(m)ale");
+        System.out.println("2. 여자: F(f)emale");
+        System.out.println("----------------------------------");
+        System.out.print("[성별]: ");
         String gender = scanner.nextLine();
         while (!ValidationSystem.isValidGender(gender)) {
-            //gender 오류
-            System.out.println("다시 입력");
+            System.out.println("성별형식이 올바르지 않습니다!");
+            System.out.print("[재입력]: ");
             gender = scanner.nextLine();
         }
-        System.out.println("phoneNumber: ");
+        System.out.println("----------[휴대폰번호 형식]-----------");
+        System.out.println("1. 앞자리는 2~3자리의 숫자로 입력해주세요.");
+        System.out.println("2. 앞자리의 중간자리 사이에 '-'을 입력해주세요.");
+        System.out.println("3. 중간자리는 3~4자리의 숫자로 입력해주세요.");
+        System.out.println("4. 중간자리와 뒷자리 사이에 '-'을 입력해주세요.");
+        System.out.println("5. 마지막자리는 4자리의 숫자로 입력해주세요.");
+        System.out.println("-----------------------------------");
+        System.out.print("[휴대폰번호]: ");
         String phoneNumber = scanner.nextLine();
         while (!ValidationSystem.isValidPhoneNumber(phoneNumber)) {
             //phone 오류
-            System.out.println("다시 입력");
+            System.out.println("휴대폰번호형식이 올바르지 않습니다!");
+            System.out.print("[재입력]: ");
             phoneNumber = scanner.nextLine();
         }
-        System.out.println("birthday: ");
+        System.out.println("----------[생년월일 형식]-----------");
+        System.out.println("1. 1900년부터 2024년까지의 연도를 입력해주세요.");
+        System.out.println("2. '-'으로 년도와 월을 구분해 주세요.");
+        System.out.println("3. 01월부터 12월까지의 월을 입력해주세요.");
+        System.out.println("4. '-'으로 월과 일을 구분해 주세요.");
+        System.out.println("5. 01일부터 31일까지 일을 입력해주세요.");
+        System.out.println("-----------------------------------");
+        System.out.print("[생년월일]: ");
         String birthday = scanner.nextLine();
-        while (!ValidationSystem.isValidBirthDay(birthday)) {
+        while (!ValidationSystem.isValidDate(birthday)) {
             //birth 오류 출력
-            System.out.println("다시 입력");
+            System.out.println("생년월일형식이 올바르지 않습니다!");
+            System.out.print("[재입력]: ");
             birthday = scanner.nextLine();
         }
         if(choiceNum.equals("1")) {
-            System.out.println("accountNumber: ");
+            System.out.println("----------[계좌번호 형식]-----------");
+            System.out.println("1. 첫 번째 부분은 3자리에서 6자리 사이의 숫자입니다.");
+            System.out.println("2. 두 번째 부분은 2자리에서 6자리 사이의 숫자입니다.");
+            System.out.println("3. 세 번째 부분은 1자리 이상의 숫자입니다.");
+            System.out.println("4. 각 부분은 하이픈(-)으로 구분됩니다.");
+            System.out.println("----------------------------------");
+            System.out.print("[계좌번호]: ");
             String accountNumber = scanner.nextLine();
             while (!ValidationSystem.isValidaccountNumber(accountNumber)) {
                 //accountNumber 오류
-                System.out.println("다시 입력");
+                System.out.println("계좌번호형식이 올바르지 않습니다!");
+                System.out.print("[재입력]: ");
                 accountNumber = scanner.nextLine();
             }
-            System.out.println("accountpw: ");
+            System.out.println("----------[계좌비밀번호 형식]-----------");
+            System.out.println("1. 숫자로 구성된 4자리수여야 합니다.");
+            System.out.println("-----------------------------------");
+            System.out.print("[계좌비밀번호]: ");
             String accountPassword = scanner.nextLine();
             while (!ValidationSystem.isValidaccountPassword(accountPassword)) {
                 //accountpw 오류
-                System.out.println("다시 입력");
+                System.out.println("계좌비밀번호형식이 올바르지 않습니다!");
+                System.out.print("[재입력]: ");
                 accountPassword = scanner.nextLine();
             }
-
-
+            System.out.println("[효성AMS의 학생으로 회원등록되셨습니다!]");
+            System.out.println("************감사합니다^^************");
             userService.signInStudent(id, password, name, gender, phoneNumber, birthday, accountNumber, accountPassword);
         } else if (choiceNum.equals("2")) {
-            System.out.println("email: ");
+            System.out.println("----------[이메일 형식]-----------");
+            System.out.println("1. 최소 한 개 이상의 알파벳(소문자 또는 대문자) 또는 숫자가 있어야 합니다.");
+            System.out.println("2. 반드시 '@'문자가 있어야 합니다.");
+            System.out.println("3. 최소 한 개 이상의 알파벳(소문자 또는 대문자) 또는 숫자가 있어야 합니다.");
+            System.out.println("4. 반드시 '.'문자가 있어야 합니다.");
+            System.out.println("5. 최소 한 개 이상의 소문자 알파벳을 포함해야 합니다.");
+            System.out.println("-----------------------------------");
+            System.out.print("이메일: ");
             String email = scanner.nextLine();
             while (!ValidationSystem.isValidEmail(email)) {
                 //email 오류
-                System.out.println("다시 입력");
+                System.out.print("[재입력]: ");
                 email = scanner.nextLine();
             }
+            System.out.println("[효성AMS의 강사로 회원등록되셨습니다!]");
+            System.out.println("***********감사합니다^^***********");
             userService.signInTeacher(id,password,name,gender,phoneNumber,birthday,email);
         }
-
 
     }
     public void showDetailStudent() throws IOException {
         System.out.println("**********************************");
         String studentId;
         while(true) {
-            System.out.println("상세정보를 확인하실 학생의 아이디를 입력해주세요: ");
+            System.out.println("[상세정보를 확인하실 학생의 아이디]");
+            System.out.print("[입력]: ");
             studentId = scanner.nextLine();
+            System.out.println("**********************************");
             if(adminService.detailStudentInformation(studentId))
                 break; // 수정할 학생 찾음
         } // 학생 찾아옴
@@ -332,8 +451,10 @@ public class AmsApp {
         String studentId;
 
         while(true) {
-            System.out.println("수정하실 학생의 아이디를 입력해주세요: ");
+            System.out.println("[수정하실 학생의 아이디]");
+            System.out.print("[입력]: ");
             studentId = scanner.nextLine();
+            System.out.println("**********************************");
             if(adminService.showStudentInformation(studentId))
                 break; // 수정할 학생 찾음
         } // 학생 찾아옴
@@ -342,27 +463,47 @@ public class AmsApp {
         String value = "";
         int option = 0;
         while(true) {
-            System.out.println("번호 입력 : ");
-            option = Integer.parseInt(scanner.nextLine());
+            System.out.print("[입력]: ");
+            String input = scanner.nextLine();
+            System.out.println("**********************************");
+            // 입력 값 검증
+            if (input.isEmpty()) {
+                System.out.print("올바른 값을 입력해주세요: ");
+                continue;
+            }
 
-            if(0 < option && option < 5) break;
-            else System.out.println("1 ~ 4 사이의 번호를 입력해주세요.");
+            try {
+                option = Integer.parseInt(input);
+                if(0 < option && option < 5) break; // 올바른 범위의 숫자가 입력된 경우
+                else System.out.println("1 ~ 4 사이의 번호를 입력해주세요!");
+            } catch (NumberFormatException e) {
+                System.out.println("숫자를 입력해주세요!"); // 숫자가 아닌 값을 입력한 경우
+            }
         }
 
         switch(option) {
             case 1 :
                 while(true) {
-                    System.out.print("새로운 비밀번호 입력해주세요: ");
+                    System.out.println("[새로운 비밀번호]");
+                    System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if(!ValidationSystem.isValidPassword(value)){
-                        System.out.println("비밀번호형식 잘못 되셨습니다.");
+                        System.out.println("비밀번호형식이 올바르지 않습니다!");
+                        System.out.println("-------[비밀번호 형식]-------");
+                        System.out.println("1. 최소 1개이상의 영어 대문자");
+                        System.out.println("2. 최소 1개이상의 영어 소문자");
+                        System.out.println("3. 최소 1개이상의 숫자");
+                        System.out.println("4. 최소 1개이상의 특수문자");
+                        System.out.println("5. 최소 8자리 이상의 비밀번호");
+                        System.out.println("---------------------------");
                     } else break;
                 }
                 break;
             case 2 :
                 while(true) {
-                    System.out.print("새로운 이름을 입력해주세요: ");
+                    System.out.println("[새로운 이름]");
+                    System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if(!ValidationSystem.isValidName(value)){
@@ -372,21 +513,34 @@ public class AmsApp {
                 break;
             case 3:
                 while(true) {
-                    System.out.print("새로운 휴대폰번호를 입력해주세요: ");
+                    System.out.println("[새로운 휴대폰번호] ");
+                    System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if(!ValidationSystem.isValidPhoneNumber(value)){
-                        System.out.println("휴대폰번호형식이 잘못 되셨습니다.");
+                        System.out.println("휴대폰번호형식이 잘못 되셨습니다!");
+                        System.out.println("----------[휴대폰번호 형식]-----------");
+                        System.out.println("1. 앞자리는 2~3자리의 숫자로 입력해주세요.");
+                        System.out.println("2. 앞자리의 중간자리 사이에 '-'을 입력해주세요.");
+                        System.out.println("3. 중간자리는 3~4자리의 숫자로 입력해주세요.");
+                        System.out.println("4. 중간자리와 뒷자리 사이에 '-'을 입력해주세요.");
+                        System.out.println("5. 마지막자리는 4자리의 숫자로 입력해주세요.");
+                        System.out.println("-----------------------------------");
+
                     } else break;
                 }
                 break;
             case 4:
                 while(true) {
-                    System.out.print("새로운 계좌번호를 입력해주세요: ");
+                    System.out.println("[새로운 계좌비밀번호]");
+                    System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if(!ValidationSystem.isValidaccountPassword(value)){
-                        System.out.println("계좌번호형식이 잘못 되셨습니다.");
+                        System.out.println("계좌비밀번호형식이 잘못 되셨습니다1");
+                        System.out.println("----------[계좌비밀번호 형식]-----------");
+                        System.out.println("1. 숫자로 구성된 4자리수여야 합니다.");
+                        System.out.println("-----------------------------------");
                     } else break;
                 }
                 break;
@@ -400,21 +554,26 @@ public class AmsApp {
         String studentId;
 
         while(true) {
-            System.out.println("삭제하실 학생의 아이디를 입력해주세요: ");
+            System.out.println("[삭제하실 학생의 아이디]");
+            System.out.print("[입력]: ");
             studentId = scanner.nextLine();
+            System.out.println("*****************************************");
             if(adminService.newDeleteStudentInformation(studentId))
                 break; // 수정할 학생 찾음
         } // 학생 찾아옴
     }
     //강사정보 상세보기
     public void showDetailTeacher() throws IOException {
-        System.out.println("**********************************");
+        System.out.println("*********************************");
         String teacherId;
 
         while(true) {
-            System.out.println("상세정보를 확인하실 강사의 아이디를 입력해주세요: ");
+            System.out.println("[상세정보를 확인하실 강사의 아이디]");
+            System.out.print("[입력]: ");
             teacherId = scanner.nextLine();
+            System.out.println("*****************************************");
             if(adminService.detailTeacherInformation(teacherId))
+                System.out.println();
                 break; // 수정할 학생 찾음
         } // 학생 찾아옴
     }
@@ -424,8 +583,10 @@ public class AmsApp {
         String teacherId;
 
         while(true) {
-            System.out.println("수정하실 강사의 아이디를 입력해주세요: ");
+            System.out.println("[수정하실 강사의 아이디]: ");
+            System.out.print("[입력]: ");
             teacherId = scanner.nextLine();
+            System.out.println("*********************************************");
             if(adminService.showTeacherInformation(teacherId))break; // 수정할 학생 찾음
         } // 선생 찾아옴
 
@@ -434,28 +595,37 @@ public class AmsApp {
         String value = "";
         int option = 0;
         while(true) {
-            System.out.println("번호 입력 : ");
+            System.out.println("[수정하실 번호]");
+            System.out.print("[입력]: ");
             option = Integer.parseInt(scanner.nextLine());
 
             if(0 < option && option < 5) break;
             else System.out.println("1 ~ 4 사이의 번호를 입력해주세요.");
         }
 
-
         switch(option) {
             case 1 :
                 while(true) {
-                    System.out.print("새로운 비밀번호 입력해주세요: ");
+                    System.out.println("[새로운 비밀번호]");
+                    System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if(!ValidationSystem.isValidPassword(value)){
-                        System.out.println("비밀번호형식 잘못 되셨습니다.");
+                        System.out.println("비밀번호형식이 올바르지 않습니다!");
+                        System.out.println("-------[비밀번호 형식]-------");
+                        System.out.println("1. 최소 1개이상의 영어 대문자");
+                        System.out.println("2. 최소 1개이상의 영어 소문자");
+                        System.out.println("3. 최소 1개이상의 숫자");
+                        System.out.println("4. 최소 1개이상의 특수문자");
+                        System.out.println("5. 최소 8자리 이상의 비밀번호");
+                        System.out.println("---------------------------");
                     } else break;
                 }
                 break;
             case 2 :
                 while(true) {
-                    System.out.print("새로운 이름을 입력해주세요: ");
+                    System.out.println("[새로운 이름]");
+                    System.out.println("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if(!ValidationSystem.isValidName(value)){
@@ -465,21 +635,37 @@ public class AmsApp {
                 break;
             case 3:
                 while(true) {
-                    System.out.print("새로운 휴대폰번호를 입력해주세요: ");
+                    System.out.println("[새로운 휴대폰번호]");
+                    System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if(!ValidationSystem.isValidPhoneNumber(value)){
                         System.out.println("휴대폰번호형식이 잘못 되셨습니다.");
+                        System.out.println("-----------[휴대폰번호 형식]-------------");
+                        System.out.println("1. 앞자리는 2~3자리의 숫자로 입력해주세요.");
+                        System.out.println("2. 앞자리의 중간자리 사이에 '-'을 입력해주세요.");
+                        System.out.println("3. 중간자리는 3~4자리의 숫자로 입력해주세요.");
+                        System.out.println("4. 중간자리와 뒷자리 사이에 '-'을 입력해주세요.");
+                        System.out.println("5. 마지막자리는 4자리의 숫자로 입력해주세요.");
+                        System.out.println("--------------------------------------");
                     } else break;
                 }
                 break;
             case 4:
                 while(true) {
-                    System.out.print("새로운 이메일을 입력해주세요: ");
+                    System.out.println("[새로운 이메일]");
+                    System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if(!ValidationSystem.isValidEmail(value)){
-                        System.out.println("이메일형식이 잘못 되셨습니다.");
+                        System.out.println("이메일형식이 잘못 되셨습니다!");
+                        System.out.println("-----------[이메일 형식]-------------");
+                        System.out.println("1. 최소 한 개 이상의 알파벳(소문자 또는 대문자) 또는 숫자가 있어야 합니다.");
+                        System.out.println("2. 반드시 '@'문자가 있어야 합니다.");
+                        System.out.println("3. 최소 한 개 이상의 알파벳(소문자 또는 대문자) 또는 숫자가 있어야 합니다.");
+                        System.out.println("4. 반드시 '.'문자가 있어야 합니다.");
+                        System.out.println("5. 최소 한 개 이상의 소문자 알파벳을 포함해야 합니다.");
+                        System.out.println("--------------------------------------");
                     } else break;
                 }
                 break;
@@ -494,8 +680,10 @@ public class AmsApp {
         String teacherId;
 
         while(true) {
-            System.out.println("삭제하실 강사의 아이디를 입력해주세요: ");
+            System.out.println("[삭제하실 강사의 아이디]");
+            System.out.print("[입력]: ");
             teacherId = scanner.nextLine();
+            System.out.println("**********************************");
             if(adminService.newDeleteTeacherInformation(teacherId))
                 break;
         }
@@ -506,22 +694,24 @@ public class AmsApp {
         String lectureId;
 
         while(true) {
-            System.out.println("상세정보를 확인하실 강의 아이디를 입력해주세요: ");
+            System.out.println("[상세정보를 확인하실 강의 아이디]");
+            System.out.print("[입력]: ");
             lectureId = scanner.nextLine();
+            System.out.println("**********************************");
             if(adminService.detailLectureInformation(lectureId))
                 break;
         }
     }
     //강의등록
     public void registerLecture() throws IOException {
-        System.out.println("**신규 강의 정보 등록**");
+        System.out.println("         [신규 강의정보 등록]        ");
 
         System.out.print("[강의 이름]: ");
         String name = scanner.nextLine();
 
         System.out.println("[강의 요일]");
         System.out.println("[0]: 월요일 [1]: 화요일 [2]: 수요일 [3]: 목요일 [4]: 금요일");
-        System.out.print("입력: ");
+        System.out.print("[입력]: ");
         int day = -1;
         boolean dayCheck = false;
         while(!dayCheck){
@@ -537,7 +727,7 @@ public class AmsApp {
 
         System.out.println("[강의 시간]");
         System.out.println("[0] 10:00 ~ 12:00 [1] 13:00 ~ 14:50 [2] 15:00 ~ 16:50 [3] 17:00 ~ 19:00");
-        System.out.print("입력: ");
+        System.out.print("[입력]: ");
         int time = -1;
         boolean timeCheck = false;
         while(!timeCheck){
@@ -561,8 +751,10 @@ public class AmsApp {
 //            System.out.println("강사가 이미 같은 요일과 같은 시간에 강의를 가지고 있습니다.");
 //        }
 
+        adminService.showTeacherList();
         while (!isTeacherExist) {
-            System.out.print("[담당 강사 아이디]: ");
+            System.out.println("[담당 강사 아이디]");
+            System.out.print("[입력]: ");
             teacherId = scanner.nextLine();
             isTeacherExist = adminService.isExistTeacher(teacherId);
             // lectureRepository있으면,
@@ -588,7 +780,8 @@ public class AmsApp {
         String lectureId;
 
         while(true) {
-            System.out.println("삭제하실 강의 아이디를 입력해주세요: ");
+            System.out.println("[삭제하실 강의 아이디]");
+            System.out.print("[입력]: ");
             lectureId = scanner.nextLine();
             if(adminService.newDeleteLectureInformation(lectureId))
                 break;

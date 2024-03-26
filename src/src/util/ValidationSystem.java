@@ -2,6 +2,10 @@ package src.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 public class ValidationSystem {
@@ -52,20 +56,58 @@ public class ValidationSystem {
         return true;
     }
 
-    public static boolean isValidBirthDay (String input) {
-        String regex = "^(19[0-9][0-9]|20[0-1][0-9]|202[0-4])-?(0[1-9]|1[0-2])-?(0[1-9]|[1-2][0-9]|3[0-1])$";
-        // 주의] 월별 일자는 체크 못함
-        boolean isValid = Pattern.matches(regex, input);
-        if(!isValid) return false;
+//    public static boolean isValidBirthDay (String input) {
+//        String regex = "^(19[0-9][0-9]|20[0-1][0-9]|202[0-4])-?(0[1-9]|1[0-2])-?(0[1-9]|[1-2][0-9]|3[0-1])$";
+//        // 주의] 월별 일자는 체크 못함
+//        boolean isValid = Pattern.matches(regex, input);
+//        if(!isValid) return false;
+//
+//        try{
+//            SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd");
+//            dateFormat.setLenient(false);
+//            dateFormat.parse(input);
+//            return  true;
+//        }catch (ParseException e){
+//            return  false;
+//        }
+//    }
 
-        try{
-            SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd");
-            dateFormat.setLenient(false);
-            dateFormat.parse(input);
-            return  true;
-        }catch (ParseException e){
-            return  false;
+    public static boolean isValidDate(String inputDate) {
+        // 년-월-일 형식 확인을 위한 정규 표현식
+        String datePattern = "^(19\\d{2}|20\\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$";
+        if (!inputDate.matches(datePattern)) {
+            // 입력 형식이 년-월-일 패턴과 일치하지 않으면 false 반환
+            return false;
         }
+
+        String[] parts = inputDate.split("-");
+        try {
+            int year = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            int day = Integer.parseInt(parts[2]);
+
+            if (year < 1900 || year > 2099) return false;
+            if (month < 1 || month > 12) return false;
+            if (day < 1 || day > 31) return false;
+
+            // 각 월의 최대 일수
+            int[] daysInMonth = {
+                    31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+            };
+
+            // 윤년 체크
+            if (month == 2 && isLeapYear(year)) {
+                daysInMonth[1] = 29; // 2월의 경우, 윤년에는 29일까지 있음
+            }
+
+            return day <= daysInMonth[month - 1];
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private static boolean isLeapYear(int year) {
+        return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
     }
 
     public static boolean isValidaccountNumber (String input) {

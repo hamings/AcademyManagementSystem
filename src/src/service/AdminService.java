@@ -7,7 +7,10 @@ import src.repository.RepositoryProvider;
 import src.repository.TeacherRepository;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -25,14 +28,15 @@ public class AdminService {
     private Repository<Notification,String> notificationRepository;
     private Bank bank = new Bank();
     private Admin admin;
+    private LocalDate lastPaymentDay;
 
     public AdminService() throws IOException {
         this.studentRepository = RepositoryProvider.getInstance().provide(ServiceType.STUDENT);
         this.teacherRepository = RepositoryProvider.getInstance().provide(ServiceType.TEACHER);
         this.lectureRepository = RepositoryProvider.getInstance().provide(ServiceType.LECTURE);
         this.notificationRepository = RepositoryProvider.getInstance().provide(ServiceType.NOTIFICATION);
+        this.lastPaymentDay = LocalDate.of(2024,2,26);
     }
-
     public Admin getAdmin(){
         return this.admin;
     }
@@ -42,6 +46,16 @@ public class AdminService {
 
     //학원결제시스템
     public void bankSystem() throws IOException {
+        LocalDate nowDate = LocalDate.now();
+        if(lastPaymentDay!=null && Period.between(lastPaymentDay,nowDate).getMonths()!=1){
+            System.out.println("[오늘은 결제일이 아닙니다!]");
+            System.out.println("[다음 결제일]: "+lastPaymentDay.plusMonths(1));
+            return;
+        }
+        lastPaymentDay = nowDate;
+
+
+
         List<Student> studentList = studentRepository.findAll();
         List<String> successList = new ArrayList<>();
         List<String> failList = new ArrayList<>();
@@ -53,7 +67,6 @@ public class AdminService {
             String adminContent = "";
             String studentContent = "";
 
-
             if(checkAccount){
                 if(paymentAccount){
                     adminContent = "납부완료";
@@ -63,13 +76,11 @@ public class AdminService {
                     adminContent = "미납대상";
                     studentContent = "계좌의 잔액부족으로 출금이 실패하였습니다.";
                     failList.add(student.getName());
-                    System.out.println(111);
                 }
             } else{
                 adminContent = "미납대상";
                 studentContent = "계좌정보미일치로 인해 출금이 실패하였습니다.";
                 failList.add(student.getName());
-                System.out.println(2222);
             }
 
             Notification notification = new Notification(1,0,adminContent ,studentContent ,student.getId(),LocalDateTime.now(),result);
@@ -83,12 +94,16 @@ public class AdminService {
             notificationRepository.save();
         }
         //관리자서비스 - 한달 학원비 정산
+        System.out.println("        [학원비 납부인원 현황]         ");
+        System.out.println("----------------------------------");
         System.out.println("학원비 납부 완료: " + successList.size() + "명");
         System.out.println("학원비 미납: " + failList.size() + "명");
+        System.out.println("----------------------------------");
+        System.out.println("           [학원비 미납자]");
         for(String name : failList) {
-            System.out.println("*********************");
-            System.out.println("*     " + name + "     *");
-            System.out.println("*********************");
+            System.out.println("*********************************");
+            System.out.println("             "+name+"          ");
+            System.out.println("*********************************");
         }
     }
 
@@ -118,8 +133,8 @@ public class AdminService {
     public void showStudentList() throws IOException {
         List<Student> StudentList = studentRepository.findAll();
 
-        System.out.println("       [학생리스트]     ");
-        System.out.println("***********************");
+        System.out.println("            [학생리스트]           ");
+        System.out.println("**********************************");
         for (Student student : StudentList) {
             student.printStudentInformation();
         }
@@ -148,22 +163,26 @@ public class AdminService {
         switch (option) {
             case 1:
                 student.setPassword(value);
-                System.out.println("학생의 비밀번호 수정이 완료되었습니다.");
+                System.out.println("-------------------------------");
+                System.out.println("학생의 비밀번호 수정이 완료되었습니다!");
                 System.out.println("수정된 학생의 비밀번호: " + value);
                 break;
             case 2:
                 student.setName(value);
-                System.out.println("학생의 이름이 수정 완료되었습니다.");
+                System.out.println("----------------------------");
+                System.out.println("학생의 이름이 수정 완료되었습니다!");
                 System.out.println("수정된 학생의 이름: " + value);
                 break;
             case 3:
                 student.setPhoneNumber(value);
-                System.out.println("학생의 휴대폰번호가 수정 완료되었습니다.");
+                System.out.println("--------------------------------");
+                System.out.println("학생의 휴대폰번호가 수정 완료되었습니다!");
                 System.out.println("수정된 학생의 휴대폰번호: " + value);
                 break;
             case 4:
                 student.setAccountPassword(value);
-                System.out.println("학생의 계좌비밀번호가 수정 완료되었습니다.");
+                System.out.println("----------------------------------");
+                System.out.println("학생의 계좌비밀번호가 수정 완료되었습니다!");
                 System.out.println("수정된 학생의 계좌비밀번호: " + value);
                 break;
         }
@@ -173,12 +192,13 @@ public class AdminService {
     public boolean newDeleteStudentInformation(String studentId) throws IOException {
         Student student = studentRepository.findById(studentId);
         if(student == null) {
-            System.out.println("입력 아이디에 해당하는 학생정보가 없습니다.");
+            System.out.println("입력 아이디에 해당하는 학생정보가 없습니다!");
+            System.out.println();
             return false;
         }
         studentRepository.delete(student);
-        System.out.println("입력하신 학생의정보가 삭제되었습니다.");
-
+        System.out.println("[입력하신 학생의정보가 삭제되었습니다!]");
+        System.out.println();
         studentRepository.save();
         return true;
     }
@@ -186,6 +206,8 @@ public class AdminService {
     //첫번째화면 - 강사정보출력(기능은 아님) - 이름, 아이디만
     public void showTeacherList() throws IOException {
         List<Teacher> TeacherList = teacherRepository.findAll();
+        System.out.println("           [강사리스트]         ");
+        System.out.println("**********************************");
         for (Teacher teacher : TeacherList) {
             teacher.printTeacherInformation();
         }
@@ -238,8 +260,8 @@ public class AdminService {
             return false;
         }
         teacherRepository.delete(teacher);
-        System.out.println("입력하신 강사의정보가 삭제되었습니다.");
-
+        System.out.println("[입력하신 강사의정보가 삭제되었습니다!]");
+        System.out.println();
         teacherRepository.save();
         return true;
     }
@@ -247,7 +269,8 @@ public class AdminService {
     //첫번째화면 - 강의정보출력(기능은 아님)
     public void showLectureList() throws IOException {
         List<Lecture> LectureList = lectureRepository.findAll();
-
+        System.out.println("                [강의리스트]         ");
+        System.out.println("*********************************************");
         for (Lecture lecture : LectureList) {
             lecture.printLectureInformation();
         }
@@ -266,7 +289,7 @@ public class AdminService {
     public boolean detailLectureInformation(String lectureId) throws IOException {
         Lecture lecture = lectureRepository.findById(lectureId);
         if(lecture == null) {
-            System.out.println("입력 아이디에 해당하는 학생정보가 없습니다.");
+            System.out.println("입력 아이디에 해당하는 강의정보가 없습니다.");
             return false;
         }
         lecture.printDetailLectureInformation();
@@ -340,8 +363,8 @@ public class AdminService {
             return false;
         }
         lectureRepository.delete(lecture);
-        System.out.println("입력하신 강사의정보가 삭제되었습니다.");
-
+        System.out.println("[입력하신 강의정보가 삭제되었습니다!]");
+        System.out.println();
         lectureRepository.save();
         return true;
     }
