@@ -72,6 +72,7 @@ public class AmsApp {
 
                                 }else if(num.equals("3")){
                                     studentService.showStudentAllRegistrationLecture();
+                                    //System.out.println();
                                 }else{
                                     //올바르지 않은 번호 선택
                                     System.out.println("\n올바르지 않은 번호입니다.");
@@ -107,6 +108,12 @@ public class AmsApp {
                                 System.out.println();
                                 break;
 
+                            }
+                            case "4": {
+                                // 로그아웃
+                                studentService.setStudent((Student) userService.logout());
+                                System.out.println();
+                                break;
                             }
                             default: {
                                 //번호 잘못입력
