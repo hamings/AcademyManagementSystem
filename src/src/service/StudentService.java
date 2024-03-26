@@ -234,7 +234,7 @@ public class StudentService {
 
     public boolean isExistResevation(){
         if (studyRoom.getReservationMap().containsKey(student.getId())) {
-            System.out.println("당일 이미 예약된 좌석이 있습니다.\n");
+            System.out.println("["+student.getName()+"님] 이미 예약된 좌석이 있습니다.\n");
             return true;
         }
         return false;

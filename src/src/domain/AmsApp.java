@@ -437,13 +437,13 @@ public class AmsApp {
         switch (option) {
             case 1:
                 while (true) {
+                    Constant.printPasswordFormat();
                     System.out.println("[새로운 비밀번호]");
                     Constant.printInputText();
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if (!ValidationSystem.isValidPassword(value)) {
                         Constant.notMatchFormat();
-                        Constant.printPasswordFormat();
                     } else break;
                 }
                 break;
@@ -460,25 +460,25 @@ public class AmsApp {
                 break;
             case 3:
                 while (true) {
+                    Constant.printPhoneNumberFormat();
                     System.out.println("[새로운 휴대폰번호] ");
                     System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if (!ValidationSystem.isValidPhoneNumber(value)) {
                         Constant.notMatchFormat();
-                        Constant.printPhoneNumberFormat();
                     } else break;
                 }
                 break;
             case 4:
                 while (true) {
+                    Constant.printAccountPasswordFormat();
                     System.out.println("[새로운 계좌비밀번호]");
                     Constant.printInputText();
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if (!ValidationSystem.isValidaccountPassword(value)) {
                         Constant.notMatchFormat();
-                        Constant.printAccountPasswordFormat();
                     } else break;
                 }
                 break;
@@ -553,13 +553,13 @@ public class AmsApp {
         switch (option) {
             case 1:
                 while (true) {
+                    Constant.printPasswordFormat();
                     System.out.println("[새로운 비밀번호]");
                     Constant.printInputText();
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if (!ValidationSystem.isValidPassword(value)) {
                         Constant.notMatchFormat();
-                        Constant.printPasswordFormat();
                     } else break;
                 }
                 break;
@@ -576,25 +576,25 @@ public class AmsApp {
                 break;
             case 3:
                 while (true) {
+                    Constant.printPhoneNumberFormat();
                     System.out.println("[새로운 휴대폰번호]");
                     Constant.printInputText();
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if (!ValidationSystem.isValidPhoneNumber(value)) {
                         Constant.notMatchFormat();
-                        Constant.printPhoneNumberFormat();
                     } else break;
                 }
                 break;
             case 4:
                 while (true) {
+                    Constant.printEmailFormat();
                     System.out.println("[새로운 이메일]");
                     System.out.print("[입력]: ");
                     value = scanner.nextLine();
                     //휴대폰번호, 형식 맞나 검사
                     if (!ValidationSystem.isValidEmail(value)) {
                         Constant.notMatchFormat();
-                        Constant.printEmailFormat();
                     } else break;
                 }
                 break;
