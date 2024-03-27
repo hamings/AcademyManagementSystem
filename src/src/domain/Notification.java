@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 
-public class Notification  implements Serializable {
+public class Notification implements Serializable {
     private int notificationId;//알림아이디
     private int checkCount;//읽은 카운트 수
     private String adminContent;//학생에게 보여주는 메시지

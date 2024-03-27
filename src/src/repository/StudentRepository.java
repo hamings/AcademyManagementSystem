@@ -12,13 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class StudentRepository implements Repository<Student, String>{
+public class StudentRepository implements Repository<Student, String> {
     private Map<Long, LectureRegistration> lectureRegistrationMap; // 1:N 관계 객체 -> 좋은 구조는 아님...
     private Map<String, Lecture> lectureMap;
     private Map<String, Student> objectMap;
+
     @Override
     public boolean isExist(String objectId) {
-        if(objectMap.get(objectId) != null) return true;
+        if (objectMap.get(objectId) != null) return true;
         return false;
     }
 
@@ -28,9 +29,9 @@ public class StudentRepository implements Repository<Student, String>{
         // student객체는 저장 될 때 반드시 lectureRegistrationId 객체를 null값으로 가지면 안된다 -> 생성자에서 생성하기
         Student student = objectMap.get(objectId);
 
-        if(student == null) return null;
+        if (student == null) return null;
 
-        if(student.getLectureRegistrationList() == null) {
+        if (student.getLectureRegistrationList() == null) {
             student.setLectureRegistrationList(new ArrayList<>());
             for (Long id : student.getLectureRegistrationIdList()) {
                 student.getLectureRegistrationList().add(lectureRegistrationMap.get(id));
@@ -45,12 +46,12 @@ public class StudentRepository implements Repository<Student, String>{
         // 어차피 findAll 메서드를 통해서 수강관련 데이터 접근 안함 -> 바인딩 필요 x
         List<Student> studentList =
                 objectMap.entrySet().stream()
-                .map(e-> e.getValue())
-                .collect(Collectors.toList());
+                        .map(e -> e.getValue())
+                        .collect(Collectors.toList());
 
 
-        for(Student student : studentList) {
-            if(student.getLectureRegistrationList() == null) {
+        for (Student student : studentList) {
+            if (student.getLectureRegistrationList() == null) {
                 student.setLectureRegistrationList(new ArrayList<>());
 
                 for (Long id : student.getLectureRegistrationIdList()) {
@@ -78,10 +79,11 @@ public class StudentRepository implements Repository<Student, String>{
         // 연관관계 삭제 추가 -> 수강신청순회
         lectureMap = FileSystem.loadObjectMap(ServiceType.LECTURE);
 
-        for(LectureRegistration lectureRegistration : object.getLectureRegistrationList()) {
+        for (LectureRegistration lectureRegistration : object.getLectureRegistrationList()) {
             Lecture lecture = lectureMap.get(lectureMap.get(lectureRegistration.getLectureId()).getLectureId());
             lecture.getLectureRegistrationIdList().remove(lectureRegistration.getId());
-            if(lecture.getLectureRegistrationList() != null) lecture.getLectureRegistrationList().remove(lectureRegistration);
+            if (lecture.getLectureRegistrationList() != null)
+                lecture.getLectureRegistrationList().remove(lectureRegistration);
 
             lectureRegistrationMap.remove(lectureRegistration.getId());
             lectureMap.remove(lectureMap.get(lectureRegistration.getLectureId()).getLectureId());
@@ -101,7 +103,7 @@ public class StudentRepository implements Repository<Student, String>{
 
     @Override
     public void init() throws IOException {
-        objectMap = (Map<String, Student>)FileSystem.loadObjectMap(ServiceType.STUDENT);
-        lectureRegistrationMap = (Map<Long, LectureRegistration>)FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
+        objectMap = (Map<String, Student>) FileSystem.loadObjectMap(ServiceType.STUDENT);
+        lectureRegistrationMap = (Map<Long, LectureRegistration>) FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
     }
 }

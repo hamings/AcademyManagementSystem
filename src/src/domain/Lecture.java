@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Lecture  implements Serializable {
+public class Lecture implements Serializable {
     private String lectureId; //강의아이디
     private String lectureName;//강의이름
     private int lectureDay;//강의요일
@@ -29,39 +29,38 @@ public class Lecture  implements Serializable {
         this.lectureTeacherName = lectureTeacherName;
         this.lectureTeacherId = lectureTeacherId;
         this.lectureRegistrationIdList = new ArrayList<>();
+        this.lectureRegistrationList = new ArrayList<>();
     }
 
-    public void printLectureInformation(){
-
+    public void printLectureInformation() {
         System.out.println("이름: " + lectureName + ", 아이디: " + lectureId);
         System.out.println("*********************************************");
     }
 
-    public void printDetailLectureInformation(){
-
+    public void printDetailLectureInformation() {
         String realLectureDay = "";
-        if(lectureDay == 0){
+        if (lectureDay == 0) {
             realLectureDay = "월요일";
-        } else if(lectureDay == 1){
+        } else if (lectureDay == 1) {
             realLectureDay = "화요일";
-        }  else if(lectureDay == 2){
+        } else if (lectureDay == 2) {
             realLectureDay = "수요일";
-        }  else if(lectureDay == 3){
+        } else if (lectureDay == 3) {
             realLectureDay = "목요일";
-        } else if(lectureDay == 4){
+        } else if (lectureDay == 4) {
             realLectureDay = "금요일";
         }
 
         String realLectureTime = "";
-        if(lectureTime == 0){
+        if (lectureTime == 0) {
             realLectureTime = "10:00 ~ 12:00";
-        } else if(lectureTime == 1){
+        } else if (lectureTime == 1) {
             realLectureTime = "13:00 ~ 14:50";
-        }  else if(lectureTime == 2){
+        } else if (lectureTime == 2) {
             realLectureTime = "15:00 ~ 16:50";
-        }  else if(lectureTime == 3){
+        } else if (lectureTime == 3) {
             realLectureTime = "17:00 ~ 19:00";
         }
-        System.out.println("이름: " + lectureName + ", 아이디: " + lectureId + ", 강의요일: " + realLectureDay + ", 강의시간: " + realLectureTime +  ", 담당강사: " + lectureTeacherName);
+        System.out.println("이름: " + lectureName + ", 아이디: " + lectureId + ", 강의요일: " + realLectureDay + ", 강의시간: " + realLectureTime + ", 담당강사: " + lectureTeacherName);
     }
 }

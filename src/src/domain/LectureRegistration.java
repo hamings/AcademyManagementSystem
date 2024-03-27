@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LectureRegistration  implements Serializable {
+public class LectureRegistration implements Serializable {
     //student - lecture의 중간 객체
     private Long id;
     private String lectureId;

@@ -11,18 +11,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public class NotificationRepository implements Repository<Queue<Notification>, String>{
+public class NotificationRepository implements Repository<Queue<Notification>, String> {
     Map<String, Queue<Notification>> objectMap;
+
     @Override
     public boolean isExist(String objectId) {
-        if(objectMap.get(objectId) == null) return false;
+        if (objectMap.get(objectId) == null) return false;
         else return true;
     }
 
     @Override
     public Queue<Notification> findById(String objectId) throws IOException {
         Queue q = objectMap.get(objectId);
-        if(q == null) objectMap.put(objectId, new LinkedList<>());
+        if (q == null) objectMap.put(objectId, new LinkedList<>());
 
         return objectMap.get(objectId);
     }

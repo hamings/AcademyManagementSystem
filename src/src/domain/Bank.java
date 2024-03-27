@@ -10,7 +10,7 @@ public class Bank {
     private static List<Account> accountList;
     private static int successCount;
 
-    static{
+    static {
         accountList = new ArrayList<>();
         accountList.add(new Account("111-11-1", "1234", 1000000L));
         accountList.add(new Account("222-22-2", "1234", 1000000L));
@@ -19,9 +19,9 @@ public class Bank {
     }
 
     //결제승인체크(학생계좌번호, 계좌비밀번호 맞는지 체크)
-    public boolean checkAccount(String accountNumber, String accountPassword){
+    public boolean checkAccount(String accountNumber, String accountPassword) {
         for (Account account : accountList) {
-            if(account.getAccountNumber().equals(accountNumber) && account.getAccountPassword().equals(accountPassword)){
+            if (account.getAccountNumber().equals(accountNumber) && account.getAccountPassword().equals(accountPassword)) {
                 return true;
             }
         }
@@ -29,11 +29,11 @@ public class Bank {
     }
 
     //학생학원비결제 진행
-    public boolean paymentAccount(String accountNumber, Long lectureCost) {
+    public boolean accountTransfer(String accountNumber, Long lectureCost) {
         for (Account account : accountList) {
-            if(account.getAccountNumber().equals(accountNumber)){
-                if(account.getBalance() >= lectureCost) {
-                    account.setBalance(account.getBalance() - lectureCost );
+            if (account.getAccountNumber().equals(accountNumber)) {
+                if (account.getBalance() >= lectureCost) {
+                    account.setBalance(account.getBalance() - lectureCost);
                     return true;
                 } else return false;
             }
@@ -42,9 +42,9 @@ public class Bank {
     }
 
     //학생잔액조회
-    public long finalBalance(String accountNumber){
+    public long getBalance(String accountNumber) {
         for (Account account : accountList) {
-            if(account.getAccountNumber().equals(accountNumber)){
+            if (account.getAccountNumber().equals(accountNumber)) {
                 return account.getBalance();
             }
         }
@@ -52,9 +52,9 @@ public class Bank {
     }
 
     //효성은행에 존재하는 계좌인지 체크
-    public boolean checkAmsAccount(String accountNumber){
+    public boolean checkAmsAccount(String accountNumber) {
         for (Account account : accountList) {
-            if(account.equals(accountNumber)){
+            if (account.equals(accountNumber)) {
                 return true;
             }
         }

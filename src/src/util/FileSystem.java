@@ -10,6 +10,7 @@ public class FileSystem {
     private static Map<ServiceType, String> filenameMap;
     private static Map<ServiceType, Boolean> isNotSavedMap;
     private static Map<ServiceType, Map> mapCache;
+
     static {
         isNotSavedMap = new HashMap<>();
         isNotSavedMap.put(ServiceType.LECTURE, false);
@@ -34,9 +35,9 @@ public class FileSystem {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         mapCache = new HashMap<>();
     }
+
     public static void makeFile(ServiceType serviceType) throws IOException {
         String filename = filenameMap.get(serviceType);
         File file = new File(filename);
@@ -50,12 +51,11 @@ public class FileSystem {
         Map objectMap = null;
         String filename = filenameMap.get(serviceType);
 
-
-        try{
+        try {
             File file = new File(filename);
 
-            if(file.length() == 0) {
-                if( !isNotSavedMap.get(serviceType)) {
+            if (file.length() == 0) {
+                if (!isNotSavedMap.get(serviceType)) {
                     objectMap = new HashMap();
                     isNotSavedMap.put(serviceType, true);
                     mapCache.put(serviceType, objectMap);
@@ -68,28 +68,24 @@ public class FileSystem {
             fis = new FileInputStream(file);
             bis = new BufferedInputStream(fis);
             ois = new ObjectInputStream(bis);
-            if(isNotSavedMap.get(serviceType)) {
+            if (isNotSavedMap.get(serviceType)) {
                 objectMap = mapCache.get(serviceType);
-            }
-            else {
-                //System.out.println(1111);
+            } else {
                 objectMap = (Map) ois.readObject();
                 isNotSavedMap.put(serviceType, true);
-
                 mapCache.put(serviceType, objectMap);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try{
-                if(ois != null) {
+            try {
+                if (ois != null) {
                     ois.close();
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
         return objectMap;
     }
 
@@ -99,15 +95,12 @@ public class FileSystem {
         ObjectOutputStream oos = null;
         String filename = filenameMap.get(serviceType);
 
-
-        try{
+        try {
             fos = new FileOutputStream(filename);
             bos = new BufferedOutputStream(fos);
             oos = new ObjectOutputStream(bos);
-
             oos.writeObject(objectMap);
-            //isNotSavedMap.put(serviceType, false);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             oos.close();

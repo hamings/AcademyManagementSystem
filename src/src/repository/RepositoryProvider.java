@@ -22,9 +22,11 @@ public class RepositoryProvider {
         repositoryList.add(new NotificationRepository());
     }
 
-    private RepositoryProvider() {}
+    private RepositoryProvider() {
+    }
+
     public static RepositoryProvider getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new RepositoryProvider();
             instance.repositoryMap = new HashMap<>();
         }
@@ -34,14 +36,14 @@ public class RepositoryProvider {
 
     public Repository provide(ServiceType serviceType) throws IOException {
         Repository repository;
-        if((repository = repositoryMap.get(serviceType)) != null) {
+        if ((repository = repositoryMap.get(serviceType)) != null) {
             // 이미 init된 레포지토리 있는지 검색 -> 있으면 반환
             return repository;
         }
 
 
         repository = repositoryList.stream()
-                .filter(repo ->  repo.support(serviceType))
+                .filter(repo -> repo.support(serviceType))
                 .findFirst()
                 .get();
 

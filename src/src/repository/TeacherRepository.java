@@ -15,13 +15,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class TeacherRepository implements Repository<Teacher, String>{
+public class TeacherRepository implements Repository<Teacher, String> {
     private Map<String, Lecture> lectureMap;
     private Map<Long, LectureRegistration> lectureRegistrationMap;
     private Map<String, Teacher> objectMap;
+
     @Override
     public boolean isExist(String objectId) {
-        if(objectMap.get(objectId) != null) return true;
+        if (objectMap.get(objectId) != null) return true;
         return false;
     }
 
@@ -30,9 +31,9 @@ public class TeacherRepository implements Repository<Teacher, String>{
         lectureRegistrationMap = FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
 
         Teacher teacher = objectMap.get(objectId);
-        if(teacher == null) return null;
+        if (teacher == null) return null;
 
-        if(teacher.getLectureList() == null) {
+        if (teacher.getLectureList() == null) {
             // 캐시 -> 이미 조회한 엔티티의 내용을 다시 바인딩 할 필요가 없음.
             teacher.setLectureList(new ArrayList<>());
             for (String id : teacher.getLectureIdList()) {
@@ -53,23 +54,21 @@ public class TeacherRepository implements Repository<Teacher, String>{
         return teacher;
     }
 
-
     @Override
     public List<Teacher> findAll() {
         List<Teacher> teacherList =
                 objectMap.entrySet().stream()
-                .map(e-> e.getValue())
-                .collect(Collectors.toList());
+                        .map(e -> e.getValue())
+                        .collect(Collectors.toList());
 
-        for(Teacher teacher : teacherList) {
-            if(teacher.getLectureList() == null) {
+        for (Teacher teacher : teacherList) {
+            if (teacher.getLectureList() == null) {
                 teacher.setLectureList(new ArrayList<>());
                 for (String id : teacher.getLectureIdList()) {
                     teacher.getLectureList().add(lectureMap.get(id));
                 }
             }
         }
-
         return teacherList;
     }
 

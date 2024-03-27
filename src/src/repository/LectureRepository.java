@@ -13,15 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class LectureRepository implements Repository<Lecture, String>{
+public class LectureRepository implements Repository<Lecture, String> {
 
     private Map<Long, LectureRegistration> lectureRegistrationMap; // 1:N 관계 객체 -> 좋은 구조는 아님...
     private Map<String, Teacher> teacherMap;
     private Map<String, Student> studentMap;
     Map<String, Lecture> objectMap;
+
     @Override
     public boolean isExist(String objectId) {
-        if(objectMap.get(objectId) != null) return true;
+        if (objectMap.get(objectId) != null) return true;
         return false;
     }
 
@@ -29,9 +30,9 @@ public class LectureRepository implements Repository<Lecture, String>{
     public Lecture findById(String objectId) {
         Lecture lecture = objectMap.get(objectId);
 
-        if(lecture == null) return null;
+        if (lecture == null) return null;
 
-        if(lecture.getLectureRegistrationList() == null) {
+        if (lecture.getLectureRegistrationList() == null) {
             lecture.setLectureRegistrationList(new ArrayList<>());
             for (Long id : lecture.getLectureRegistrationIdList()) {
                 lecture.getLectureRegistrationList().add(lectureRegistrationMap.get(id));
@@ -43,15 +44,15 @@ public class LectureRepository implements Repository<Lecture, String>{
 
     @Override
     public List<Lecture> findAll() throws IOException {
-        lectureRegistrationMap = (Map<Long, LectureRegistration>)FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
+        lectureRegistrationMap = (Map<Long, LectureRegistration>) FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
 
         List<Lecture> lectureList =
                 objectMap.entrySet().stream()
-                .map(e-> e.getValue())
-                .collect(Collectors.toList());
+                        .map(e -> e.getValue())
+                        .collect(Collectors.toList());
 
-        for(Lecture lecture : lectureList) {
-            if(lecture.getLectureRegistrationList() == null) {
+        for (Lecture lecture : lectureList) {
+            if (lecture.getLectureRegistrationList() == null) {
 
                 lecture.setLectureRegistrationList(new ArrayList<>());
                 for (Long id : lecture.getLectureRegistrationIdList()) {
@@ -123,8 +124,8 @@ public class LectureRepository implements Repository<Lecture, String>{
 
     @Override
     public void init() throws IOException {
-        objectMap = (Map<String, Lecture>)FileSystem.loadObjectMap(ServiceType.LECTURE);
-        lectureRegistrationMap = (Map<Long, LectureRegistration>)FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
+        objectMap = (Map<String, Lecture>) FileSystem.loadObjectMap(ServiceType.LECTURE);
+        lectureRegistrationMap = (Map<Long, LectureRegistration>) FileSystem.loadObjectMap(ServiceType.LECTUREREGISTRATION);
         teacherMap = (Map<String, Teacher>) FileSystem.loadObjectMap(ServiceType.TEACHER);
         studentMap = (Map<String, Student>) FileSystem.loadObjectMap(ServiceType.STUDENT);
     }
