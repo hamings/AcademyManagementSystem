@@ -1,4 +1,5 @@
 package src.domain;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Student  implements Serializable {
+public class Student implements Serializable {
     private String id;//학생 아이디
     private String password;//학생 비밀번호
     private String name;//학생 이름
@@ -38,8 +39,9 @@ public class Student  implements Serializable {
         this.lectureRegistrationIdList = new ArrayList<>();
         this.lectureRegistrationList = new ArrayList<>();
     }
+
     //선택된 학생 수정할 수 있는 정보 출력
-    public void editStudentInformation(){
+    public void printEditStudentInformation() {
         System.out.println("------------[학생정보수정]-----------");
         System.out.println("1. 학생비밀번호: " + password);
         System.out.println("2. 학생이름: " + name);
@@ -49,13 +51,13 @@ public class Student  implements Serializable {
     }
 
     //학생이름, 학생아이디 출력
-    public void printStudentInformation(){
-        System.out.println("이름: " + name + ", 아이디: " + id );
+    public void printStudentInformation() {
+        System.out.println("이름: " + name + ", 아이디: " + id);
         System.out.println("**********************************");
     }
 
-    public void printDetailStudentInformation(){
-        System.out.println("---------["+name+" 학생님]"+"---------");
+    public void printDetailStudentInformation() {
+        System.out.println("---------[" + name + " 학생님]" + "---------");
         System.out.println("1. 아이디: " + id);
         System.out.println("2. 성별: " + gender);
         System.out.println("3. 생년월일: " + birthday);

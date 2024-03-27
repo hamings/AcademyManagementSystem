@@ -1,10 +1,10 @@
 package src.domain;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.swing.plaf.synth.SynthRadioButtonMenuItemUI;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Teacher  implements Serializable {
+public class Teacher implements Serializable {
     private String id;
     private String password;
     private String name;
@@ -24,7 +24,7 @@ public class Teacher  implements Serializable {
     private transient List<Lecture> lectureList;
     private List<String> lectureIdList;
 
-    public Teacher(String id, String password, String name, String gender, String phoneNumber, String birthday, String email){
+    public Teacher(String id, String password, String name, String gender, String phoneNumber, String birthday, String email) {
         this.id = id;
         this.password = password;
         this.name = name;
@@ -37,7 +37,7 @@ public class Teacher  implements Serializable {
     }
 
     //선택된 학생 수정할 수 있는 정보 출력
-    public void editTeacherInformation(){
+    public void printEditTeacherInformation() {
         System.out.println("------------[강사정보수정]------------");
         System.out.println("1. 강사비밀번호: " + password);
         System.out.println("2. 강사이름: " + name);
@@ -45,14 +45,15 @@ public class Teacher  implements Serializable {
         System.out.println("4. 강사이메일: " + email);
         System.out.println("------------------------------------");
     }
+
     //강사의정보
-    public void printTeacherInformation(){
+    public void printTeacherInformation() {
         System.out.println("이름: " + name + ", 아이디: " + id);
         System.out.println("**********************************");
     }
 
-    public void printDetailTeacherInformation(){
-        System.out.println("---------["+name+" 강사님]"+"---------");
+    public void printDetailTeacherInformation() {
+        System.out.println("---------[" + name + " 강사님]" + "---------");
         System.out.println("1. 아이디: " + id);
         System.out.println("2. 성별: " + gender);
         System.out.println("3. 생년월일: " + birthday);
@@ -60,7 +61,7 @@ public class Teacher  implements Serializable {
         System.out.println("5. 이메일: " + email);
         System.out.println("-----------[담당강의]------------");
 
-        if(lectureList.isEmpty()){
+        if (lectureList.isEmpty()) {
             System.out.println("현재 담당하고 있는 강의가 없습니다!");
             return;
         }
