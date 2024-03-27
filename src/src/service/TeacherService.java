@@ -9,13 +9,13 @@ import src.repository.Repository;
 import src.repository.RepositoryProvider;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Optional;
 
 public class TeacherService {
     private Teacher teacher;
     private Repository<Student,String> studentRepository;
-
 
     public TeacherService() throws IOException {
         this.studentRepository = RepositoryProvider.getInstance().provide(ServiceType.STUDENT);
@@ -72,12 +72,18 @@ public class TeacherService {
      * @param lectureId : 강의번호
      */
     public void showStudentListByLecture(String lectureId) throws IOException {
-        Lecture findLecture = teacher.getLectureList().stream()
-                .filter(lecture -> lecture.getLectureId().equals(lectureId))
-                .findFirst()
-                .get();
 
-        List<LectureRegistration> lectureRegistrationList = findLecture.getLectureRegistrationList();
+        Optional<Lecture> findLecture = teacher.getLectureList().stream()
+                .filter(lecture -> lecture.getLectureId().equals(lectureId))
+                .findFirst();
+
+        if(findLecture.isEmpty()){
+            System.out.println("[해당아이디의 강의는 존재하지 않습니다.]");
+            System.out.println();
+            return;
+        }
+
+        List<LectureRegistration> lectureRegistrationList = findLecture.get().getLectureRegistrationList();
         if(lectureRegistrationList.isEmpty()){
             System.out.println("                [해당 강의를 수강하고 있는 학생이 없습니다.]              ");
             System.out.println();

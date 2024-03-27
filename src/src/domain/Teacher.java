@@ -4,7 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.swing.plaf.synth.SynthRadioButtonMenuItemUI;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -21,6 +23,18 @@ public class Teacher  implements Serializable {
     private String email;
     private transient List<Lecture> lectureList;
     private List<String> lectureIdList;
+
+    public Teacher(String id, String password, String name, String gender, String phoneNumber, String birthday, String email){
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+        this.email = email;
+        this.lectureList = new ArrayList<>();
+        this.lectureIdList = new ArrayList<>();
+    }
 
     //선택된 학생 수정할 수 있는 정보 출력
     public void editTeacherInformation(){

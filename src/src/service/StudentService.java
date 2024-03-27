@@ -130,8 +130,7 @@ public class StudentService {
 
     // 강의 시간 숫자를 실제 시간으로 바꿔주는 함수
     // lectureTime을 숫자로 받으면 각 번호에 맞는 시간으로 리턴
-    String intLectureTimeToRealTime (int lectureTime) {
-        if(lectureTime == 0){
+    String intLectureTimeToRealTime (int lectureTime) {if(lectureTime == 0){
            return "10:00 ~ 12:00";
         } else if(lectureTime == 1){
             return "13:00 ~ 14:50";
@@ -180,6 +179,7 @@ public class StudentService {
             studentRepository.save();
             lectureRepository.save();
             //studentRegistrations.put(student.getId(), lecture.getLectureRegistrationList());
+            System.out.println();
             System.out.println("수강 신청이 완료되었습니다.\n");
 
         } else
