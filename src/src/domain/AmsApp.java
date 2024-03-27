@@ -63,6 +63,7 @@ public class AmsApp {
                         num = scanner.nextLine();
                         switch (num) {
                             case "1": {
+                                while(true){
                                 Constant.printRegistrationLectureMenu();
                                 Constant.printInputText();
                                 num = scanner.nextLine();
@@ -74,7 +75,6 @@ public class AmsApp {
 
                                     String choiceLectureId = scanner.nextLine();
                                     studentService.registerLecture(choiceLectureId);
-                                    break;
                                 } else if (num.equals("2")) { //수강신청 취소
                                     if (studentService.showStudentAllRegistrationLecture()) {
                                         System.out.println("취소하고자 하는 강의의 강의 id를 입력해주세요: \n");
@@ -85,34 +85,38 @@ public class AmsApp {
 
                                 } else if (num.equals("3")) {
                                     studentService.showStudentAllRegistrationLecture();
-                                } else if (num.equals("4")) {
-                                    Constant.printLogout();
-                                    studentService.setStudent((Student) userService.logout());
+                                } else if (num.equals("0")) {
+                                    break;
                                 } else {
                                     //올바르지 않은 번호 선택
                                     Constant.incorrectNumber();
                                 }
+                                }
                                 break;
                             }
                             case "2": {
-                                studentService.showStudyRoom();
-                                Constant.printStudyRoomMenu();
-                                Constant.printInputText();
-                                num = scanner.nextLine();
-                                if (num.equals("1")) {
-                                    if (!studentService.isExistResevation()) {
-                                        System.out.println("\n예약을 원하는 좌석 번호를 입력하세요(ex: 1-1)");
-                                        Constant.printInputText();
-                                        String choiceSeat = scanner.nextLine();
-                                        studentService.isPossibleReserve(choiceSeat);
-                                    }
-                                } else if (num.equals("2")) {
-                                    System.out.println("\n취소를 원하는 좌석 좌석 번호를 입력하세요(ex: 1-1)");
+                                while(true) {
+                                    studentService.showStudyRoom();
+                                    Constant.printStudyRoomMenu();
                                     Constant.printInputText();
-                                    String seatNum = scanner.nextLine();
-                                    studentService.cancelReservation(seatNum);
-                                } else {
-                                    Constant.incorrectNumber();
+                                    num = scanner.nextLine();
+                                    if (num.equals("1")) {
+                                        if (!studentService.isExistResevation()) {
+                                            System.out.println("\n예약을 원하는 좌석 번호를 입력하세요(ex: 1-1)");
+                                            Constant.printInputText();
+                                            String choiceSeat = scanner.nextLine();
+                                            studentService.isPossibleReserve(choiceSeat);
+                                        }
+                                    } else if (num.equals("2")) {
+                                        System.out.println("\n취소를 원하는 좌석 좌석 번호를 입력하세요(ex: 1-1)");
+                                        Constant.printInputText();
+                                        String seatNum = scanner.nextLine();
+                                        studentService.cancelReservation(seatNum);
+                                    }else if(num.equals("0")){
+                                        break;
+                                    } else {
+                                        Constant.incorrectNumber();
+                                    }
                                 }
                                 break;
                             }
@@ -183,50 +187,62 @@ public class AmsApp {
 
                         switch (num) {
                             case "1": {
-                                adminService.showStudentList();
-                                Constant.printStudentInformationMenu();
-                                Constant.printInputText();
-                                num = scanner.nextLine();
-                                if (num.equals("1")) { //학생 상세
-                                    showDetailStudent();
-                                } else if (num.equals("2")) { //학생 수정
-                                    editStudentInformation();
-                                } else if (num.equals("3")) { //학생 삭제
-                                    deleteStudentInformation();
-                                } else {
-                                    Constant.incorrectNumber();
+                                while(true) {
+                                    adminService.showStudentList();
+                                    Constant.printStudentInformationMenu();
+                                    Constant.printInputText();
+                                    num = scanner.nextLine();
+                                    if (num.equals("1")) { //학생 상세
+                                        showDetailStudent();
+                                    } else if (num.equals("2")) { //학생 수정
+                                        editStudentInformation();
+                                    } else if (num.equals("3")) { //학생 삭제
+                                        deleteStudentInformation();
+                                    } else if(num.equals("0")){
+                                        break;
+                                    }else {
+                                        Constant.incorrectNumber();
+                                    }
                                 }
                                 break;
                             }
                             case "2": {
-                                adminService.showTeacherList();
-                                Constant.printTeacherInformationMenu();
-                                Constant.printInputText();
-                                num = scanner.nextLine();
+                                while(true) {
+                                    adminService.showTeacherList();
+                                    Constant.printTeacherInformationMenu();
+                                    Constant.printInputText();
+                                    num = scanner.nextLine();
 
-                                if (num.equals("1")) { //강사 상세
-                                    showDetailTeacher();
-                                } else if (num.equals("2")) { //강사 수정
-                                    editTeacherInformation();
-                                } else {
-                                    Constant.incorrectNumber();
+                                    if (num.equals("1")) { //강사 상세
+                                        showDetailTeacher();
+                                    } else if (num.equals("2")) { //강사 수정
+                                        editTeacherInformation();
+                                    }  else if (num.equals("0")) { //뒤로 가기
+                                        break;
+                                    } else {
+                                        Constant.incorrectNumber();
+                                    }
                                 }
                                 break;
                             }
                             case "3": {
-                                adminService.showLectureList();
-                                Constant.printLectureInfromationMenu();
-                                Constant.printInputText();
-                                num = scanner.nextLine();
+                                while(true) {
+                                    adminService.showLectureList();
+                                    Constant.printLectureInfromationMenu();
+                                    Constant.printInputText();
+                                    num = scanner.nextLine();
 
-                                if (num.equals("1")) { //강의 상세
-                                    showDetailLecture();
-                                } else if (num.equals("2")) { //강의 등록
-                                    registerLecture();
-                                } else if (num.equals("3")) { //강의 삭제
-                                    deleteLectureInformation();
-                                } else { //숫자 잘못 입력
-                                    Constant.incorrectNumber();
+                                    if (num.equals("1")) { //강의 상세
+                                        showDetailLecture();
+                                    } else if (num.equals("2")) { //강의 등록
+                                        registerLecture();
+                                    } else if (num.equals("3")) { //강의 삭제
+                                        deleteLectureInformation();
+                                    } else if (num.equals("0")) { //뒤로 가기
+                                        break;
+                                    } else { //숫자 잘못 입력
+                                        Constant.incorrectNumber();
+                                    }
                                 }
                                 break;
                             }
