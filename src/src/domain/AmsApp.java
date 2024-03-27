@@ -1,9 +1,5 @@
 package src.domain;
 
-import src.ServiceType;
-import src.repository.Repository;
-import src.repository.RepositoryProvider;
-import src.repository.TeacherRepository;
 import src.service.AdminService;
 import src.service.StudentService;
 import src.service.TeacherService;
@@ -74,17 +70,17 @@ public class AmsApp {
                                         Constant.printInputText();
 
                                         String choiceLectureId = scanner.nextLine();
-                                        studentService.registerLecture(choiceLectureId);
+                                        studentService.registerLectureRegistration(choiceLectureId);
                                     } else if (num.equals("2")) { //수강신청 취소
-                                        if (studentService.showStudentAllRegistrationLecture()) {
+                                        if (studentService.showLectureRegistrationList()) {
                                             System.out.println("취소하고자 하는 강의의 강의 ID를 입력해주세요: \n");
                                             Constant.printInputText();
                                             String lectureId = scanner.nextLine();
-                                            studentService.deleteLecture(lectureId);
+                                            studentService.deleteLectureRegistration(lectureId);
                                         }
 
                                     } else if (num.equals("3")) {
-                                        studentService.showStudentAllRegistrationLecture();
+                                        studentService.showLectureRegistrationList();
                                     } else if (num.equals("0")) {
                                         break;
                                     } else {
@@ -101,11 +97,11 @@ public class AmsApp {
                                     Constant.printInputText();
                                     num = scanner.nextLine();
                                     if (num.equals("1")) {
-                                        if (!studentService.isExistResevation()) {
+                                        if (!studentService.isExistReservation()) {
                                             System.out.println("\n예약을 원하는 좌석 번호를 입력하세요(ex: 1-1)");
                                             Constant.printInputText();
                                             String choiceSeat = scanner.nextLine();
-                                            studentService.isPossibleReserve(choiceSeat);
+                                            studentService.reserveStudyRoom(choiceSeat);
                                         }
                                     } else if (num.equals("2")) {
                                         System.out.println("\n취소를 원하는 좌석 좌석 번호를 입력하세요(ex: 1-1)");
@@ -179,7 +175,6 @@ public class AmsApp {
                                 Constant.incorrectNumber();
                             }
                         }
-
                     }
                 } else if (num.equals("3")) { //관리자 서비스
                     while (adminService.getAdmin() != null) {
@@ -249,7 +244,7 @@ public class AmsApp {
                                 break;
                             }
                             case "4": {
-                                adminService.bankSystem();
+                                adminService.doPaymentSystem();
                                 break;
                             }
                             case "5": {
@@ -268,9 +263,7 @@ public class AmsApp {
             } else {
                 Constant.incorrectNumber();
             }
-
         } while (true);
-
     }
 
     public void login(String choiceNum) throws IOException {
@@ -501,7 +494,7 @@ public class AmsApp {
                 }
                 break;
         }
-        adminService.newEditStudentInformation(studentId, option, value);
+        adminService.editStudentInformation(studentId, option, value);
     }
 
     //학생정보삭제
@@ -517,7 +510,7 @@ public class AmsApp {
                 return;
             }
             System.out.println("*****************************************");
-            if (adminService.newDeleteStudentInformation(studentId))
+            if (adminService.deleteStudentInformation(studentId))
                 break; // 수정할 학생 찾음
         } // 학생 찾아옴
     }
@@ -556,7 +549,6 @@ public class AmsApp {
         } // 선생 찾아옴
 
         // 메뉴 출력
-
         String value = "";
         int option = 0;
         while (true) {
@@ -617,7 +609,7 @@ public class AmsApp {
                 }
                 break;
         }
-        adminService.newEditTeacherInformation(teacherId, option, value);
+        adminService.editTeacherInformation(teacherId, option, value);
     }
 
     //강사정보삭제
@@ -631,7 +623,7 @@ public class AmsApp {
             teacherId = scanner.nextLine();
             if (teacherId.equals("0")) return;
             System.out.println("**********************************");
-            if (adminService.newDeleteTeacherInformation(teacherId))
+            if (adminService.deleteTeacherInformation(teacherId))
                 break;
         }
     }
@@ -696,12 +688,6 @@ public class AmsApp {
         String teacherId = "";
         String teacherName = "";
         boolean isTeacherExist = false;
-        boolean isExistLecture = adminService.isExistTeacher(teacherId);
-
-//        // 해당 시간에 이미 강의가 있는지 확인
-//        if (isExist) {
-//            System.out.println("강사가 이미 같은 요일과 같은 시간에 강의를 가지고 있습니다.");
-//        }
 
         adminService.showTeacherList();
         while (!isTeacherExist) {
@@ -709,8 +695,6 @@ public class AmsApp {
             Constant.printInputText();
             teacherId = scanner.nextLine();
             isTeacherExist = adminService.isExistTeacher(teacherId);
-            // lectureRepository있으면,
-            // teacherFound = lectureRepository.isExist(teacherId);
 
             if (isTeacherExist) {
                 // 해당 시간과 요일에 이미 강의가 있는지 확인
@@ -737,7 +721,7 @@ public class AmsApp {
             Constant.printInputText();
             lectureId = scanner.nextLine();
             if (lectureId.equals("0")) return;
-            if (adminService.newDeleteLectureInformation(lectureId))
+            if (adminService.deleteLectureInformation(lectureId))
                 break;
         }
     }
