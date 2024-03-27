@@ -190,7 +190,8 @@ public class Constant {
     }
 
     public static void printLogout() {
-        System.out.println("[로그아웃] 되셨습니다!");
+        System.out.println();
+        System.out.println("[로그아웃이 완료되었습니다.]");
     }
 
     public static void reInput() {

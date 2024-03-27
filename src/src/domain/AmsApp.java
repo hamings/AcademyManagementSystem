@@ -70,14 +70,14 @@ public class AmsApp {
                                 if (num.equals("1")) { //수강신청 선택
                                     studentService.showAllLectureList();
                                     // 원하는 강의 고르기
-                                    System.out.print("수강하고자 하는 강의의 강의 id를 입력해주세요: \n");
+                                    System.out.print("수강하고자 하는 강의의 강의 ID를 입력해주세요: \n");
                                     Constant.printInputText();
 
                                     String choiceLectureId = scanner.nextLine();
                                     studentService.registerLecture(choiceLectureId);
                                 } else if (num.equals("2")) { //수강신청 취소
                                     if (studentService.showStudentAllRegistrationLecture()) {
-                                        System.out.println("취소하고자 하는 강의의 강의 id를 입력해주세요: \n");
+                                        System.out.println("취소하고자 하는 강의의 강의 ID를 입력해주세요: \n");
                                         Constant.printInputText();
                                         String lectureId = scanner.nextLine();
                                         studentService.deleteLecture(lectureId);
@@ -164,6 +164,7 @@ public class AmsApp {
                                 System.out.print("[강의아이디를 입력해주세요]: ");
                                 String lectureId = scanner.nextLine();
                                 System.out.println();
+
                                 teacherService.showStudentListByLecture(lectureId);
                                 break;
                             }
@@ -406,7 +407,7 @@ public class AmsApp {
             studentId = scanner.nextLine();
             if(studentId.equals("0"))
                 return;
-            System.out.println("**********************************");
+            System.out.println("*********************************");
             if (adminService.detailStudentInformation(studentId))
                 break; // 수정할 학생 찾음
         } // 학생 찾아옴
@@ -531,7 +532,7 @@ public class AmsApp {
             teacherId = scanner.nextLine();
             if(teacherId.equals("0"))
                 return;
-            System.out.println("*****************************************");
+            System.out.println("*********************************");
             if (adminService.detailTeacherInformation(teacherId))
                 System.out.println();
             break; // 수정할 학생 찾음

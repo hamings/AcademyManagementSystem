@@ -30,6 +30,7 @@ public class AdminService {
     private Admin admin;
     private LocalDate lastPaymentDay;
 
+
     public AdminService() throws IOException {
         this.studentRepository = RepositoryProvider.getInstance().provide(ServiceType.STUDENT);
         this.teacherRepository = RepositoryProvider.getInstance().provide(ServiceType.TEACHER);
@@ -42,6 +43,10 @@ public class AdminService {
     }
     public void setAdmin(Admin admin){
         this.admin = admin;
+    }
+
+    public boolean checkInAmsAccount(String accountNumber){
+        return bank.checkAmsAccount(accountNumber);
     }
 
     //학원결제시스템
@@ -62,6 +67,7 @@ public class AdminService {
         for (Student student : studentList) {
             boolean checkAccount = bank.checkAccount(student.getAccountNumber(), student.getAccountPassword());
             boolean paymentAccount = bank.paymentAccount(student.getAccountNumber(), student.getLectureCost());
+            System.out.println(student.getLectureCost());
             Long result = bank.finalBalance(student.getAccountNumber());//결제가 완료되고 남은 학생 잔액
 
             String adminContent = "";
@@ -169,24 +175,28 @@ public class AdminService {
                 System.out.println("-------------------------------");
                 System.out.println("학생의 비밀번호 수정이 완료되었습니다!");
                 System.out.println("수정된 학생의 비밀번호: " + value);
+                studentRepository.save();
                 break;
             case 2:
                 student.setName(value);
                 System.out.println("----------------------------");
                 System.out.println("학생의 이름이 수정 완료되었습니다!");
                 System.out.println("수정된 학생의 이름: " + value);
+                studentRepository.save();
                 break;
             case 3:
                 student.setPhoneNumber(value);
                 System.out.println("--------------------------------");
                 System.out.println("학생의 휴대폰번호가 수정 완료되었습니다!");
                 System.out.println("수정된 학생의 휴대폰번호: " + value);
+                studentRepository.save();
                 break;
             case 4:
                 student.setAccountPassword(value);
                 System.out.println("----------------------------------");
                 System.out.println("학생의 계좌비밀번호가 수정 완료되었습니다!");
                 System.out.println("수정된 학생의 계좌비밀번호: " + value);
+                studentRepository.save();
                 break;
         }
     }
@@ -236,21 +246,25 @@ public class AdminService {
                 teacher.setPassword(value);
                 System.out.println("강사의 비밀번호 수정이 완료되었습니다.");
                 System.out.println("수정된 강사의 비밀번호: " + value);
+                teacherRepository.save();
                 break;
             case 2:
                 teacher.setName(value);
                 System.out.println("강사의 이름이 수정 완료되었습니다.");
                 System.out.println("수정된 강사의 이름: " + value);
+                teacherRepository.save();
                 break;
             case 3:
                 teacher.setPhoneNumber(value);
                 System.out.println("강사의 휴대폰번호가 수정 완료되었습니다.");
                 System.out.println("수정된 강사의 휴대폰번호: " + value);
+                teacherRepository.save();
                 break;
             case 4:
                 teacher.setEmail(value);
                 System.out.println("강사의 이메일이 수정 완료되었습니다.");
                 System.out.println("수정된 강사의 이메일: " + value);
+                teacherRepository.save();
                 break;
         }
     }
