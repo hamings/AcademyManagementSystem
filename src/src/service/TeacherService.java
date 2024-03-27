@@ -9,18 +9,18 @@ import src.repository.Repository;
 import src.repository.RepositoryProvider;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Optional;
 
 public class TeacherService {
     private Teacher teacher;
-    private Repository<Student,String> studentRepository;
+    private Repository<Student, String> studentRepository;
 
     public TeacherService() throws IOException {
         this.studentRepository = RepositoryProvider.getInstance().provide(ServiceType.STUDENT);
     }
-    public Teacher getTeacher(){
+
+    public Teacher getTeacher() {
         return this.teacher;
     }
 
@@ -28,38 +28,37 @@ public class TeacherService {
         this.teacher = teacher;
     }
 
-
     /**
      * 강사의 강의 리스트를 보여주는 함수
      */
-    public void showLectureList(){
-        if(teacher.getLectureList().isEmpty()){
+    public void showLectureList() {
+        if (teacher.getLectureList().isEmpty()) {
             System.out.println("                       [현재 담당하고있는 강의가 없습니다.]");
             return;
         }
 
-        for(Lecture lecture: teacher.getLectureList()){
+        for (Lecture lecture : teacher.getLectureList()) {
             String realLectureDay = "";
-            if(lecture.getLectureDay() == 0){
+            if (lecture.getLectureDay() == 0) {
                 realLectureDay = "월요일";
-            } else if(lecture.getLectureDay() == 1){
+            } else if (lecture.getLectureDay() == 1) {
                 realLectureDay = "화요일";
-            }  else if(lecture.getLectureDay() == 2){
+            } else if (lecture.getLectureDay() == 2) {
                 realLectureDay = "수요일";
-            }  else if(lecture.getLectureDay() == 3){
+            } else if (lecture.getLectureDay() == 3) {
                 realLectureDay = "목요일";
-            } else if(lecture.getLectureDay() == 4){
+            } else if (lecture.getLectureDay() == 4) {
                 realLectureDay = "금요일";
             }
 
             String realLectureTime = "";
-            if(lecture.getLectureTime() == 0){
+            if (lecture.getLectureTime() == 0) {
                 realLectureTime = "10:00 ~ 12:00";
-            } else if(lecture.getLectureTime() == 1){
+            } else if (lecture.getLectureTime() == 1) {
                 realLectureTime = "13:00 ~ 14:50";
-            }  else if(lecture.getLectureTime() == 2){
+            } else if (lecture.getLectureTime() == 2) {
                 realLectureTime = "15:00 ~ 16:50";
-            }  else if(lecture.getLectureTime() == 3){
+            } else if (lecture.getLectureTime() == 3) {
                 realLectureTime = "17:00 ~ 19:00";
             }
 
@@ -69,32 +68,33 @@ public class TeacherService {
 
     /**
      * 해당 강의를 수강하는 학생 리스트를 보여주는 함수
+     *
      * @param lectureId : 강의번호
      */
     public void showStudentListByLecture(String lectureId) throws IOException {
-
         Optional<Lecture> findLecture = teacher.getLectureList().stream()
                 .filter(lecture -> lecture.getLectureId().equals(lectureId))
                 .findFirst();
 
-        if(findLecture.isEmpty()){
+        if (findLecture.isEmpty()) {
             System.out.println("[해당아이디의 강의는 존재하지 않습니다.]");
             System.out.println();
             return;
         }
 
         List<LectureRegistration> lectureRegistrationList = findLecture.get().getLectureRegistrationList();
-        if(lectureRegistrationList.isEmpty()){
+        if (lectureRegistrationList.isEmpty()) {
             System.out.println("                [해당 강의를 수강하고 있는 학생이 없습니다.]              ");
             System.out.println();
             return;
         }
-        for(LectureRegistration lectureRegistration: lectureRegistrationList){
+        for (LectureRegistration lectureRegistration : lectureRegistrationList) {
             Student student = studentRepository.findById(lectureRegistration.getStudentId());
-            System.out.println("학생명: "+student.getName());
+            System.out.println("학생명: " + student.getName());
         }
     }
-    public boolean isTeacherLectureListEmpty(){
+
+    public boolean isTeacherLectureListEmpty() {
         return teacher.getLectureIdList().isEmpty();
     }
 }
