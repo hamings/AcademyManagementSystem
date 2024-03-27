@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class Admin {
-    private static Admin admin = new Admin();
+    private static Admin admin;
     private String id;
     private String password;
 

@@ -39,6 +39,7 @@ public class Constant {
         System.out.println("1. 수강 신청");
         System.out.println("2. 수강 취소");
         System.out.println("3. 수강 신청 내역");
+        System.out.println("0. 뒤로 가기");
         System.out.println("----------------------------------\n");
         System.out.println("원하시는 서비스 번호를 선택하세요");
     }
@@ -47,6 +48,7 @@ public class Constant {
         System.out.println("---------[자습실 관리 시스템]---------");
         System.out.println("1. 좌석 예약하기");
         System.out.println("2. 좌석 취소하기");
+        System.out.println("0. 뒤로 가기");
         System.out.println("-----------------------------------\n");
         System.out.println("원하시는 서비스 번호를 선택하세요");
     }
@@ -75,6 +77,7 @@ public class Constant {
         System.out.println("1. 학생상세정보");
         System.out.println("2. 학생정보수정");
         System.out.println("3. 학생정보삭제");
+        System.out.println("0. 뒤로 가기");
         System.out.println("---------------------------------");
     }
 
@@ -83,6 +86,7 @@ public class Constant {
         System.out.println("----------[강사정보관리]------------");
         System.out.println("1. 강사상세정보");
         System.out.println("2. 강사정보수정");
+        System.out.println("0. 뒤로 가기");
         System.out.println("---------------------------------");
     }
 
@@ -92,6 +96,7 @@ public class Constant {
         System.out.println("1. 강의상세정보");
         System.out.println("2. 신규강의등록");
         System.out.println("3. 강의정보삭제");
+        System.out.println("0. 뒤로 가기");
         System.out.println("---------------------------------");
     }
 
