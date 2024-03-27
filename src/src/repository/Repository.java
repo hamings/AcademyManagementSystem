@@ -11,12 +11,19 @@ public interface Repository<OBJECT, KEYTYPEOFOBJECT> {
 
 
     boolean isExist(KEYTYPEOFOBJECT objectId);
+
     OBJECT findById(KEYTYPEOFOBJECT objectId) throws IOException;
+
     List<OBJECT> findAll() throws IOException;
+
     void insert(OBJECT object);
+
     void save() throws IOException;
+
     int delete(OBJECT object) throws IOException;
+
     boolean support(ServiceType serviceType);
+
     void init() throws IOException;
 
 }

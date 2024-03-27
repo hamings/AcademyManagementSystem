@@ -11,14 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class LectureRegistrationRepository implements Repository<LectureRegistration, Long>{
+public class LectureRegistrationRepository implements Repository<LectureRegistration, Long> {
 
     Map<String, Student> studentMap;
     Map<String, Lecture> lectureMap;
     Map<Long, LectureRegistration> objectMap;
+
     @Override
     public boolean isExist(Long objectId) {
-        if(objectMap.get(objectId) != null) return true;
+        if (objectMap.get(objectId) != null) return true;
         return false;
     }
 
@@ -30,14 +31,14 @@ public class LectureRegistrationRepository implements Repository<LectureRegistra
     @Override
     public List<LectureRegistration> findAll() {
         return objectMap.entrySet().stream()
-                .map(e-> e.getValue())
+                .map(e -> e.getValue())
                 .collect(Collectors.toList());
     }
 
     @Override
     public void insert(LectureRegistration lectureRegistration) {
         long key = objectMap.size() + 1;
-        while(objectMap.containsKey(key)) {
+        while (objectMap.containsKey(key)) {
             key++;
         }
         lectureRegistration.setId(key);
@@ -61,8 +62,8 @@ public class LectureRegistrationRepository implements Repository<LectureRegistra
 
         idx = lecture.getLectureRegistrationIdList().indexOf(object.getId());
         lecture.getLectureRegistrationIdList().remove(idx);
-        if(student.getLectureRegistrationList() != null) student.getLectureRegistrationList().remove(object);
-        if(lecture.getLectureRegistrationList() != null) lecture.getLectureRegistrationList().remove(object);
+        if (student.getLectureRegistrationList() != null) student.getLectureRegistrationList().remove(object);
+        if (lecture.getLectureRegistrationList() != null) lecture.getLectureRegistrationList().remove(object);
 
         FileSystem.saveObjectMap(ServiceType.LECTURE, lectureMap);
         FileSystem.saveObjectMap(ServiceType.STUDENT, studentMap);
