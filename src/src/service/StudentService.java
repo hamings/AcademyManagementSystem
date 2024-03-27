@@ -296,10 +296,14 @@ public class StudentService {
             for (Notification notification : notificationQueue) {
                 if (notification.getCheckCount() != 0) {
                     System.out.println("[읽음] " + "메세지 내용: " + notification.getStudentContent());
-                    System.out.println("[잔액]: " + notification.getBalance());
+                    if(notification.getAdminContent().equals("미납대상1")) {
+                        System.out.println("[잔액]: " + notification.getBalance());
+                    }
                 } else {
                     System.out.println("[안읽음] " + "메세지 내용: " + notification.getStudentContent());
-                    System.out.println("[잔액]: " + notification.getBalance());
+                    if(notification.getAdminContent().equals("미납대상1")) {
+                        System.out.println("[잔액]: " + notification.getBalance());
+                    }
                     notification.setCheckCount(1);
                 }
             }

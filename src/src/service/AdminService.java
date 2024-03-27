@@ -50,7 +50,7 @@ public class AdminService {
     public void doPaymentSystem() throws IOException {
         LocalDate nowDate = LocalDate.now();
         if (lastPaymentDay != null && Period.between(lastPaymentDay, nowDate).getMonths() != 1) {
-            System.out.println("[오늘은 결제일이 아닙니다!]");
+            System.out.println("[이번달 결제는 이미 완료되었습니다!]");
             System.out.println("[다음 결제일]: " + lastPaymentDay.plusMonths(1));
             return;
         }
@@ -74,12 +74,12 @@ public class AdminService {
                     studentContent = "회원님의 계좌에서 정상적으로 출금을 완료하였습니다.";
                     successList.add(student.getName());
                 } else {
-                    adminContent = "미납대상";
+                    adminContent = "미납대상1";
                     studentContent = "계좌의 잔액부족으로 출금이 실패하였습니다.";
                     failList.add(student.getName());
                 }
             } else {
-                adminContent = "미납대상";
+                adminContent = "미납대상2";
                 studentContent = "계좌정보미일치로 인해 출금이 실패하였습니다.";
                 failList.add(student.getName());
             }
